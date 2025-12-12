@@ -29,17 +29,39 @@ function setupSidebar() {
 }
 
 function setupEventListeners() {
-    logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('user');
-        window.location.href = 'index.html';
-    });
+    logoutBtn.addEventListener('click', handleLogout);
 
-    document.getElementById('btn-new-chat').addEventListener('click', () => {
-        currentSessionId = null;
-        messageHistory = [];
-        chatStream.innerHTML = '';
-        appendMessage("Halo, saya di sini untuk mendengarkan. Bagaimana perasaanmu hari ini? Apakah ada sesuatu yang mengganggu pikiranmu?", 'bot');
-    });
+    // Desktop New Chat
+    document.getElementById('btn-new-chat').addEventListener('click', startNewChat);
+
+    // Mobile Menu Logic
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenuDropdown = document.getElementById('mobile-menu-dropdown');
+    const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+    const mobileNewChatBtn = document.getElementById('mobile-new-chat');
+
+    if (mobileMenuBtn && mobileMenuDropdown) {
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mobileMenuDropdown.classList.toggle('hidden');
+            setTimeout(() => {
+                mobileMenuDropdown.classList.toggle('opacity-0');
+                mobileMenuDropdown.classList.toggle('scale-95');
+            }, 10);
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuDropdown.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                mobileMenuDropdown.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => mobileMenuDropdown.classList.add('hidden'), 200);
+            }
+        });
+    }
+
+    if (mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', handleLogout);
+    if (mobileNewChatBtn) mobileNewChatBtn.addEventListener('click', startNewChat);
+
 
     sendBtn.addEventListener('click', sendMessage);
     chatInput.addEventListener('keypress', (e) => {
@@ -53,6 +75,24 @@ function setupEventListeners() {
         this.style.height = (this.scrollHeight) + 'px';
         if (this.value === '') this.style.height = 'auto';
     });
+}
+
+function handleLogout() {
+    localStorage.removeItem('user');
+    window.location.href = 'index.html';
+}
+
+function startNewChat() {
+    currentSessionId = null;
+    messageHistory = [];
+    chatStream.innerHTML = '';
+    // Optional: Close mobile menu if open
+    const mobileMenuDropdown = document.getElementById('mobile-menu-dropdown');
+    if (mobileMenuDropdown && !mobileMenuDropdown.classList.contains('hidden')) {
+        mobileMenuDropdown.classList.add('hidden');
+    }
+
+    appendMessage("Halo, saya di sini untuk mendengarkan. Bagaimana perasaanmu hari ini? Apakah ada sesuatu yang mengganggu pikiranmu?", 'bot');
 }
 
 async function loadHistory() {
