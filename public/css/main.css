@@ -33,9 +33,17 @@ body {
 }
 
 /* Utils */
-.delay-100 { animation-delay: 100ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
+.delay-100 {
+    animation-delay: 100ms;
+}
+
+.delay-200 {
+    animation-delay: 200ms;
+}
+
+.delay-300 {
+    animation-delay: 300ms;
+}
 
 /* Chat Bubbles */
 .chat-bubble-user {
@@ -59,4 +67,11 @@ body {
     background-color: #0a1f10;
     background-image: radial-gradient(#15803d 0.5px, transparent 0.5px), radial-gradient(#15803d 0.5px, #0a1f10 0.5px);
     opacity: 0.3;
+}
+
+/* Mi Browser Specific Fix */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #0a160c !important;
+    }
 }
