@@ -17,34 +17,38 @@
     class="bg-background-light dark:bg-background-dark font-display text-text-main dark:text-white h-screen overflow-hidden selection:bg-primary selection:text-black">
     <div class="flex h-full w-full">
         <!-- Sidebar -->
-        <aside
-            class="hidden md:flex flex-col w-80 h-full bg-white dark:bg-surface-dark border-r border-green-50 dark:border-green-900/30 shadow-sm z-20">
+        <div id="sidebar-overlay"
+            class="fixed inset-0 bg-black/50 z-20 hidden md:hidden glass transition-opacity duration-300 opacity-0">
+        </div>
+        <aside id="chat-sidebar"
+            class="fixed md:static inset-y-0 left-0 w-[280px] md:w-80 bg-white dark:bg-surface-dark border-r border-green-50 dark:border-green-900/30 shadow-2xl md:shadow-sm z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 h-full flex flex-col">
             <div class="p-6">
                 <!-- Logo -->
-                <div class="flex items-center gap-3 mb-8">
-                    <div
-                        class="relative flex items-center justify-center size-12 rounded-2xl bg-gradient-to-br from-primary-soft to-green-100 dark:from-green-900 dark:to-green-800 text-primary-dark dark:text-primary shadow-sm">
-                        <span class="material-symbols-outlined text-[32px]">spa</span>
-                        <span class="absolute -top-1 -right-1 flex h-3 w-3">
-                            <span
-                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
-                        </span>
+                <div class="flex items-center justify-between gap-3 mb-8">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="relative flex items-center justify-center size-10 md:size-12 rounded-2xl bg-gradient-to-br from-primary-soft to-green-100 dark:from-green-900 dark:to-green-800 text-primary-dark dark:text-primary shadow-sm">
+                            <span class="material-symbols-outlined text-[24px] md:text-[32px]">spa</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <h1
+                                class="text-xl md:text-2xl font-bold tracking-tight text-text-main dark:text-white font-display">
+                                Pulih
+                            </h1>
+                        </div>
                     </div>
-                    <div class="flex flex-col">
-                        <h1 class="text-2xl font-bold tracking-tight text-text-main dark:text-white font-display">Pulih
-                        </h1>
-                        <p class="text-xs font-medium text-text-muted dark:text-green-400">Ruang Amanmu</p>
-                    </div>
+                    <button id="close-sidebar-btn" class="md:hidden p-1 text-gray-500 hover:bg-gray-100 rounded-full">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
                 </div>
                 <!-- New Chat Button -->
                 <button id="btn-new-chat"
-                    class="w-full group relative overflow-hidden flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white font-bold py-4 px-4 rounded-2xl shadow-lg shadow-green-200/50 dark:shadow-none transition-all duration-300 transform hover:-translate-y-0.5">
+                    class="w-full group relative overflow-hidden flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white font-bold py-3 md:py-4 px-4 rounded-2xl shadow-lg shadow-green-200/50 dark:shadow-none transition-all duration-300 transform hover:-translate-y-0.5">
                     <div
                         class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                     </div>
                     <span class="material-symbols-outlined font-medium relative z-10">add_comment</span>
-                    <span class="relative z-10">Mulai Sesi Baru</span>
+                    <span class="relative z-10 text-sm md:text-base">Mulai Sesi Baru</span>
                 </button>
             </div>
             <div class="px-6">
@@ -145,6 +149,11 @@
                                 class="w-full text-left px-4 py-3 text-sm text-text-main dark:text-gray-200 hover:bg-green-50 dark:hover:bg-white/5 rounded-xl flex items-center gap-2">
                                 <span class="material-symbols-outlined text-[18px]">add_comment</span>
                                 Sesi Baru
+                            </button>
+                            <button id="mobile-history-btn"
+                                class="w-full text-left px-4 py-3 text-sm text-text-main dark:text-gray-200 hover:bg-green-50 dark:hover:bg-white/5 rounded-xl flex items-center gap-2">
+                                <span class="material-symbols-outlined text-[18px]">history</span>
+                                Riwayat Chat
                             </button>
                             <button onclick="window.location.href='profile.html'"
                                 class="w-full text-left px-4 py-3 text-sm text-text-main dark:text-gray-200 hover:bg-green-50 dark:hover:bg-white/5 rounded-xl flex items-center gap-2">

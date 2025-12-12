@@ -39,6 +39,37 @@ function setupEventListeners() {
     const mobileMenuDropdown = document.getElementById('mobile-menu-dropdown');
     const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
     const mobileNewChatBtn = document.getElementById('mobile-new-chat');
+    const mobileHistoryBtn = document.getElementById('mobile-history-btn');
+    const sidebar = document.getElementById('chat-sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+
+    function toggleSidebar(show) {
+        if (show) {
+            sidebar.classList.remove('-translate-x-full');
+            sidebarOverlay.classList.remove('hidden');
+            setTimeout(() => sidebarOverlay.classList.remove('opacity-0'), 10);
+        } else {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.add('opacity-0');
+            setTimeout(() => sidebarOverlay.classList.add('hidden'), 300);
+        }
+    }
+
+    if (mobileHistoryBtn) {
+        mobileHistoryBtn.addEventListener('click', () => {
+            toggleSidebar(true);
+            mobileMenuDropdown.classList.add('hidden'); // Close menu
+        });
+    }
+
+    if (closeSidebarBtn) {
+        closeSidebarBtn.addEventListener('click', () => toggleSidebar(false));
+    }
+
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+    }
 
     if (mobileMenuBtn && mobileMenuDropdown) {
         mobileMenuBtn.addEventListener('click', (e) => {
@@ -151,6 +182,15 @@ function loadSession(session) {
     currentSessionId = session.id;
     messageHistory = [];
     chatStream.innerHTML = '';
+
+    // Close sidebar on mobile if open
+    const sidebar = document.getElementById('chat-sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    if (sidebar && !sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.add('-translate-x-full');
+        sidebarOverlay.classList.add('opacity-0');
+        setTimeout(() => sidebarOverlay.classList.add('hidden'), 300);
+    }
 
     session.messages.forEach(msg => {
         if (msg.role === 'system') return;
