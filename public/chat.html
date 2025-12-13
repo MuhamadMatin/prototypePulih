@@ -80,16 +80,19 @@
                                 class="text-[10px] bg-primary/20 text-primary-dark dark:text-green-300 px-2 py-0.5 rounded-full w-fit">Member</span>
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-2">
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="window.toggleTheme()"
+                            class="flex items-center justify-center gap-1 py-2 text-xs font-medium text-text-muted hover:bg-white dark:hover:bg-green-900 rounded-xl transition-colors"
+                            title="Ganti Tema">
+                            <span class="material-symbols-outlined text-[16px]">contrast</span>
+                        </button>
                         <button onclick="window.location.href='profile.html'"
                             class="flex items-center justify-center gap-1 py-2 text-xs font-medium text-text-muted hover:bg-white dark:hover:bg-green-900 rounded-xl transition-colors">
                             <span class="material-symbols-outlined text-[16px]">settings</span>
-                            Pengaturan
                         </button>
                         <button id="logout-btn"
                             class="flex items-center justify-center gap-1 py-2 text-xs font-medium text-text-muted hover:bg-white dark:hover:bg-green-900 rounded-xl transition-colors">
                             <span class="material-symbols-outlined text-[16px]">logout</span>
-                            Keluar
                         </button>
                     </div>
                 </div>
@@ -161,6 +164,11 @@
                                 class="w-full text-left px-4 py-3 text-sm text-text-main dark:text-gray-200 hover:bg-green-50 dark:hover:bg-white/5 rounded-xl flex items-center gap-2">
                                 <span class="material-symbols-outlined text-[18px]">person</span>
                                 Profil
+                            </button>
+                            <button onclick="window.toggleTheme()"
+                                class="w-full text-left px-4 py-3 text-sm text-text-main dark:text-gray-200 hover:bg-green-50 dark:hover:bg-white/5 rounded-xl flex items-center gap-2">
+                                <span class="material-symbols-outlined text-[18px]">contrast</span>
+                                Ganti Tema
                             </button>
                             <div class="h-px bg-gray-100 dark:bg-gray-800 my-1 mx-2"></div>
                             <button id="mobile-logout-btn"

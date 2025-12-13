@@ -64,16 +64,43 @@ tailwind.config = {
     },
 };
 
-// Apply dark mode based on system preference
-if (typeof window !== 'undefined') {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.documentElement.classList.add('dark');
-    }
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-        if (event.matches) {
+// Theme Logic
+(function () {
+    if (typeof window === 'undefined') return;
+
+    const getSavedTheme = () => localStorage.getItem('theme');
+    const saveTheme = (theme) => localStorage.setItem('theme', theme);
+
+    const applyTheme = (isDark) => {
+        if (isDark) {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
         }
+    };
+
+    // Initialize
+    const savedTheme = getSavedTheme();
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+        applyTheme(true);
+    } else {
+        applyTheme(false);
+    }
+
+    // System Sync (only if no manual preference)
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+        if (!getSavedTheme()) {
+            applyTheme(event.matches);
+        }
     });
-}
+
+    // Global Toggle Function
+    window.toggleTheme = () => {
+        const isDark = document.documentElement.classList.contains('dark');
+        const newTheme = !isDark ? 'dark' : 'light';
+        applyTheme(!isDark);
+        saveTheme(newTheme);
+    };
+})();
