@@ -2,7 +2,7 @@
 
 **Pulih** adalah platform chatbot berbasis AI yang dirancang untuk memberikan dukungan psikologis awal dan ruang aman bagi pengguna, khususnya korban kekerasan seksual. Aplikasi ini menyediakan teman bicara yang empatik, non-judgmental, dan tersedia 24/7.
 
-![Tampilan Aplikasi](img/preview.png)
+![Tampilan Aplikasi](public/img/preview.png)
 *(Jika ada screenshot, bisa ditambahkan di sini)*
 
 ## ✨ Fitur Utama
