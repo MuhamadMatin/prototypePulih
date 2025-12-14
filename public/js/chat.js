@@ -280,7 +280,26 @@ async function sendMessage() {
 
         while (true) {
             const { done, value } = await reader.read();
-            if (done) break;
+            if (done) {
+                if (buffer.trim()) {
+                    const lines = buffer.split('\n');
+                    for (const line of lines) {
+                        const trimmed = line.trim();
+                        if (trimmed.startsWith('data:')) {
+                            const dataStr = trimmed.replace('data:', '').trim();
+                            if (dataStr !== '[DONE]') {
+                                try {
+                                    const json = JSON.parse(dataStr);
+                                    if (json.choices && json.choices[0].delta && json.choices[0].delta.content) {
+                                        fullReply += json.choices[0].delta.content;
+                                    }
+                                } catch (e) { }
+                            }
+                        }
+                    }
+                }
+                break;
+            }
 
             const chunk = decoder.decode(value, { stream: true });
             buffer += chunk;
@@ -298,7 +317,13 @@ async function sendMessage() {
                         if (json.choices && json.choices[0].delta && json.choices[0].delta.content) {
                             const content = json.choices[0].delta.content;
                             fullReply += content;
-                            contentDiv.innerHTML = marked.parse(fullReply);
+
+                            // Safe Marked Parse
+                            const parsed = (typeof marked !== 'undefined')
+                                ? marked.parse(fullReply)
+                                : fullReply.replace(/\n/g, '<br>');
+
+                            contentDiv.innerHTML = parsed;
                             scrollToBottom();
                         }
                     } catch (e) { }
@@ -306,7 +331,10 @@ async function sendMessage() {
             }
         }
 
-        contentDiv.innerHTML = marked.parse(fullReply);
+        const finalParsed = (typeof marked !== 'undefined')
+            ? marked.parse(fullReply)
+            : fullReply.replace(/\n/g, '<br>');
+        contentDiv.innerHTML = finalParsed;
 
         messageHistory.push({ role: "user", content: text });
         messageHistory.push({ role: "assistant", content: fullReply });
@@ -371,11 +399,32 @@ async function initiateAutoChat(prompt) {
 
         while (true) {
             const { done, value } = await reader.read();
-            if (done) break;
+            if (done) {
+                // Process remaining buffer
+                if (buffer.trim()) {
+                    const lines = buffer.split('\n');
+                    for (const line of lines) {
+                        const trimmed = line.trim();
+                        if (trimmed.startsWith('data:')) {
+                            const dataStr = trimmed.replace('data:', '').trim();
+                            if (dataStr !== '[DONE]') {
+                                try {
+                                    const json = JSON.parse(dataStr);
+                                    if (json.choices && json.choices[0].delta && json.choices[0].delta.content) {
+                                        fullReply += json.choices[0].delta.content;
+                                    }
+                                } catch (e) { }
+                            }
+                        }
+                    }
+                }
+                break;
+            }
 
-            buffer += decoder.decode(value, { stream: true });
+            const chunk = decoder.decode(value, { stream: true });
+            buffer += chunk;
             const lines = buffer.split('\n');
-            buffer = lines.pop();
+            buffer = lines.pop(); // Keep incomplete line
 
             for (const line of lines) {
                 const trimmed = line.trim();
@@ -385,14 +434,27 @@ async function initiateAutoChat(prompt) {
                     try {
                         const json = JSON.parse(dataStr);
                         if (json.choices && json.choices[0].delta && json.choices[0].delta.content) {
-                            fullReply += json.choices[0].delta.content;
-                            contentDiv.innerHTML = marked.parse(fullReply);
+                            const content = json.choices[0].delta.content;
+                            fullReply += content;
+
+                            // Safe Marked Parse
+                            const parsed = (typeof marked !== 'undefined')
+                                ? marked.parse(fullReply)
+                                : fullReply.replace(/\n/g, '<br>');
+
+                            contentDiv.innerHTML = parsed;
                             scrollToBottom();
                         }
-                    } catch (e) { }
+                    } catch (e) { console.error("Stream parse error", e); }
                 }
             }
         }
+
+        // Final safe parse
+        const finalParsed = (typeof marked !== 'undefined')
+            ? marked.parse(fullReply)
+            : fullReply.replace(/\n/g, '<br>');
+        contentDiv.innerHTML = finalParsed;
 
         // Add to history so AI remembers the reaction
         messageHistory.push({ role: "assistant", content: fullReply });
