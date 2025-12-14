@@ -127,6 +127,31 @@ async function getChatById(id) {
     return rows[0];
 }
 
+return newStreak;
+}
+
+// Context for Chat
+async function getDataContext(userId) {
+    if (!userId) return null;
+
+    // Get latest mood
+    const [moods] = await pool.execute(
+        'SELECT * FROM mood_logs WHERE userId = ? ORDER BY createdAt DESC LIMIT 1',
+        [userId]
+    );
+
+    // Get latest journal
+    const [journals] = await pool.execute(
+        'SELECT * FROM journal_entries WHERE userId = ? ORDER BY createdAt DESC LIMIT 1',
+        [userId]
+    );
+
+    return {
+        mood: moods[0] || null,
+        journal: journals[0] || null
+    };
+}
+
 module.exports = {
     pool,
     initDB,
@@ -138,14 +163,12 @@ module.exports = {
     updateChat,
     getChatsByUserId,
     getChatById,
-    // Mood
     createMoodLog,
     getMoodHistory,
-    // Journal
     createJournalEntry,
     getJournalEntries,
-    // Streak
-    updateUserStreak
+    updateUserStreak,
+    getDataContext // Exported
 };
 
 // Mood Operations

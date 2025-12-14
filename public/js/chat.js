@@ -329,6 +329,80 @@ async function sendMessage() {
     }
 }
 
+// --- Event Listeners for Dashboard Integration ---
+window.addEventListener('moodUpdated', (e) => {
+    const { level, note } = e.detail;
+    // Hide modal
+    document.getElementById('mood-modal')?.classList.add('hidden');
+    document.getElementById('mood-modal')?.classList.remove('flex');
+
+    // Trigger AI response (Simulate User context update)
+    const prompt = `[SYSTEM UPDATE: User recorded Mood Level ${level}/5. Note: "${note}". Respond immediately and supportively to this emotional change.]`;
+
+    // UI: Show small indicator
+    const historyContainer = document.getElementById('history-container');
+    const notice = document.createElement('div');
+    notice.className = "flex justify-center my-2 text-xs text-gray-400 italic";
+    notice.innerText = "Mood diperbarui...";
+    historyContainer.appendChild(notice);
+
+    // Call AI
+    initiateAutoChat(prompt);
+});
+
+window.addEventListener('journalUpdated', (e) => {
+    const { content } = e.detail;
+    // Hide modal or keep open? User might want to read feedback.
+    // Just notify AI for NEXT context.
+    console.log("Journal updated, context available.");
+});
+
+async function initiateAutoChat(prompt) {
+    const botMsgDiv = appendMessage('', 'bot', true);
+    const contentDiv = botMsgDiv.querySelector('.markdown-content');
+
+    try {
+        const response = await initiateChatStream(prompt, messageHistory, currentUser.isAnonymous ? null : currentUser.id, currentSessionId);
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let buffer = "";
+        let fullReply = "";
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop();
+
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (trimmed.startsWith('data:')) {
+                    const dataStr = trimmed.replace('data:', '').trim();
+                    if (dataStr === '[DONE]') continue;
+                    try {
+                        const json = JSON.parse(dataStr);
+                        if (json.choices && json.choices[0].delta && json.choices[0].delta.content) {
+                            fullReply += json.choices[0].delta.content;
+                            contentDiv.innerHTML = marked.parse(fullReply);
+                            scrollToBottom();
+                        }
+                    } catch (e) { }
+                }
+            }
+        }
+
+        // Add to history so AI remembers the reaction
+        messageHistory.push({ role: "assistant", content: fullReply });
+
+    } catch (e) {
+        console.error("Auto chat error", e);
+        contentDiv.innerHTML = "Error generating response.";
+    }
+}
+
 function renderSuggestions(suggestions) {
     const div = document.createElement('div');
     div.className = "flex flex-wrap gap-2 mt-3 ml-1 animate-fade-in-up max-w-[85%]";

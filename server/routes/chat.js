@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
-const { createChat, updateChat, getChatsByUserId, getChatById } = require('../utils/db');
+const { createChat, updateChat, getChatsByUserId, getChatById, getDataContext } = require('../utils/db');
 const SYSTEM_PROMPT = require('../utils/systemPrompt');
 
 require('dotenv').config();
@@ -58,11 +58,6 @@ router.post('/session', async (req, res) => {
 });
 
 // Crisis Detection
-const { NORMAL_SYSTEM_PROMPT, CRISIS_SYSTEM_PROMPT } = require('../utils/systemPrompt');
-
-// ... other routes ...
-
-// Crisis Detection
 const CRISIS_KEYWORDS = [
     "bunuh diri", "ingin mati", "akhiri hidup", "lukai diri", "tidak kuat lagi", "gantung diri", "minum racun", "lompat dari", "iris nadi", "potong nadi"
 ];
@@ -85,8 +80,26 @@ router.post('/', async (req, res) => {
     const isCrisis = checkCrisis(message);
     const selectedSystemPrompt = isCrisis ? CRISIS_SYSTEM_PROMPT : NORMAL_SYSTEM_PROMPT;
 
+    // Fetch Context (Mood/Journal) if userId is present
+    let contextStr = "";
+    if (userId) {
+        try {
+            const contextData = await getDataContext(userId);
+            if (contextData) {
+                const { mood, journal } = contextData;
+                contextStr += "\n\n[CONTEXT DATA (Use this to personalize response)]\n";
+                if (mood) {
+                    contextStr += `- Latest Mood(${new Date(mood.createdAt).toLocaleDateString()}): Level ${mood.moodLevel}/5. Note: "${mood.note || ''}"\n`;
+                }
+                if (journal) {
+                    contextStr += `- Latest Journal (${new Date(journal.createdAt).toLocaleDateString()}): "${journal.content.substring(0, 300)}..."\n`;
+                }
+            }
+        } catch (err) { console.error("Error fetching context:", err); }
+    }
+
     const messages = [
-        { role: "system", content: selectedSystemPrompt },
+        { role: "system", content: selectedSystemPrompt + contextStr },
         ...(history || []),
         { role: "user", content: message }
     ];
@@ -100,9 +113,9 @@ router.post('/', async (req, res) => {
     };
 
     try {
-        const response = await axios.post(`${INFERENCE_URL}/v1/chat/completions`, payload, {
+        const response = await axios.post(`${INFERENCE_URL} /v1/chat / completions`, payload, {
             headers: {
-                'Authorization': `Bearer ${INFERENCE_KEY}`,
+                'Authorization': `Bearer ${INFERENCE_KEY} `,
                 'Content-Type': 'application/json'
             },
             responseType: 'stream'
@@ -122,7 +135,7 @@ router.post('/', async (req, res) => {
 
     } catch (error) {
         console.error("Error generating chat completion:", error.message);
-        res.write(`event: error\ndata: {"error": "Internal Server Error"}\n\n`);
+        res.write(`event: error\ndata: { "error": "Internal Server Error" } \n\n`);
         res.end();
     }
 });
@@ -137,21 +150,21 @@ router.post('/summary', async (req, res) => {
         if (!session || !session.messages) return res.status(404).json({ error: "Session not found" });
 
         const messages = typeof session.messages === 'string' ? JSON.parse(session.messages) : session.messages;
-        const transcript = messages.map(m => `${m.role}: ${m.content}`).join('\n');
+        const transcript = messages.map(m => `${m.role}: ${m.content} `).join('\n');
 
         const prompt = [
             { role: "system", content: "You are a psychologist. Summarize the following counseling session in 3-5 bullet points in Indonesian. Focus on the user's main concerns and emotional state." },
             { role: "user", content: transcript }
         ];
 
-        const response = await axios.post(`${INFERENCE_URL}/v1/chat/completions`, {
+        const response = await axios.post(`${INFERENCE_URL} /v1/chat / completions`, {
             model: INFERENCE_MODEL_ID,
             messages: prompt,
             temperature: 0.5,
             max_tokens: 500
         }, {
             headers: {
-                'Authorization': `Bearer ${INFERENCE_KEY}`,
+                'Authorization': `Bearer ${INFERENCE_KEY} `,
                 'Content-Type': 'application/json'
             }
         });
@@ -171,12 +184,12 @@ router.post('/suggest', async (req, res) => {
 
     const historyText = (history || [])
         .slice(-4)
-        .map(m => `${m.role === 'user' ? 'User' : 'Counselor'}: ${m.content}`)
+        .map(m => `${m.role === 'user' ? 'User' : 'Counselor'}: ${m.content} `)
         .join('\n');
 
     const suggestionMessages = [
         { role: "system", content: "You are an assistant generating 3 possible responses for a User (counseling client) to say to their AI Counselor. The suggestions must be in the first person ('Aku'/'Saya'). They should be natural responses to the Counselor's last message, such as answering a question, expressing a feeling, or asking for specific advice. Do NOT generate questions that a counselor would ask (like 'Sudah berapa lama?'). Output ONLY a raw JSON array of strings. Example: [\"Aku merasa sedih.\", \"Apa yang harus aku lakukan?\", \"Aku tidak yakin.\"]." },
-        { role: "user", content: `Here is the recent conversation context:\n\n${historyText}\n\nBased on this interaction, suggest 3 relevant responses for the USER to say next in Indonesian.` }
+        { role: "user", content: `Here is the recent conversation context: \n\n${historyText} \n\nBased on this interaction, suggest 3 relevant responses for the USER to say next in Indonesian.` }
     ];
 
     const payload = {
@@ -187,9 +200,9 @@ router.post('/suggest', async (req, res) => {
     };
 
     try {
-        const response = await axios.post(`${INFERENCE_URL}/v1/chat/completions`, payload, {
+        const response = await axios.post(`${INFERENCE_URL} /v1/chat / completions`, payload, {
             headers: {
-                'Authorization': `Bearer ${INFERENCE_KEY}`,
+                'Authorization': `Bearer ${INFERENCE_KEY} `,
                 'Content-Type': 'application/json'
             }
         });

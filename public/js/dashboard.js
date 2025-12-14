@@ -69,6 +69,12 @@ function setupMoodTracker() {
                 });
                 alert('Mood tercatat!');
                 loadMoodHistory(); // Refresh chart
+
+                // Dispatch Event to Chat
+                window.dispatchEvent(new CustomEvent('moodUpdated', {
+                    detail: { level: level, note: note }
+                }));
+
             } catch (e) { alert('Gagal menyimpan mood'); }
         });
     });
@@ -139,6 +145,12 @@ function setupJournaling() {
 
             saveBtn.innerText = "Simpan & Analisis";
             saveBtn.disabled = false;
+
+            // Dispatch Event to Chat
+            window.dispatchEvent(new CustomEvent('journalUpdated', {
+                detail: { content: content }
+            }));
+
         } catch (e) {
             alert('Error');
             saveBtn.disabled = false;
