@@ -41,3 +41,49 @@ CREATE TABLE IF NOT EXISTS journal_entries (
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 );
+
+-- Self Assessment Results (PHQ-9, GAD-7)
+CREATE TABLE IF NOT EXISTS assessments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId VARCHAR(255) NOT NULL,
+    type ENUM('PHQ9', 'GAD7') NOT NULL,
+    score INT NOT NULL,
+    severity VARCHAR(50),
+    answers JSON,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- User Achievements (Gamification)
+CREATE TABLE IF NOT EXISTS achievements (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId VARCHAR(255) NOT NULL,
+    achievementType VARCHAR(50) NOT NULL,
+    unlockedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_achievement (userId, achievementType),
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Safety Plan
+CREATE TABLE IF NOT EXISTS safety_plans (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId VARCHAR(255) NOT NULL UNIQUE,
+    warningSignals TEXT,
+    copingStrategies TEXT,
+    reasonsToLive TEXT,
+    supportContacts JSON,
+    safeEnvironmentSteps TEXT,
+    professionalContacts JSON,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Grounding Exercise Sessions
+CREATE TABLE IF NOT EXISTS grounding_sessions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId VARCHAR(255) NOT NULL,
+    completedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+);
+

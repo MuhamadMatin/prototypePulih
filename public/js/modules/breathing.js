@@ -1,5 +1,5 @@
 // Breathing Logic
-import { toggleModal } from './ui.js';
+import { toggleModal, showToast } from './ui.js';
 
 export function setupBreathing() {
     const startBtn = document.getElementById('btn-start-breathing');
@@ -52,7 +52,12 @@ function runBreathingCycle(circle, text) {
                     circle.style.transitionDuration = "4000ms";
                     circle.classList.remove('scale-75');
                 }
+
+                // Dispatch completion event for achievements
+                window.dispatchEvent(new CustomEvent('breathingCompleted'));
+                showToast('Latihan napas selesai! 🧘', 'success');
             }, 8000);
         }, 7000);
     }, 4000);
 }
+

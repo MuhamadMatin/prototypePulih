@@ -79,22 +79,15 @@ tailwind.config = {
         }
     };
 
-    // Initialize
+    // Initialize - Default to LIGHT theme
     const savedTheme = getSavedTheme();
-    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+    // Only apply dark if user explicitly saved 'dark' preference
+    if (savedTheme === 'dark') {
         applyTheme(true);
     } else {
         applyTheme(false);
     }
-
-    // System Sync (only if no manual preference)
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-        if (!getSavedTheme()) {
-            applyTheme(event.matches);
-        }
-    });
 
     // Global Toggle Function
     window.toggleTheme = () => {

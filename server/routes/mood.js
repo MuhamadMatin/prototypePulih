@@ -22,16 +22,17 @@ router.post('/', async (req, res) => {
     }
 });
 
-// GET /api/mood/history?userId=... - Get history
+// GET /api/mood/history?userId=...&days=... - Get history
 router.get('/history', async (req, res) => {
-    const { userId } = req.query;
+    const { userId, days } = req.query;
 
     if (!userId) {
         return res.status(400).json({ error: "UserId is required" });
     }
 
     try {
-        const history = await getMoodHistory(userId);
+        const daysNum = parseInt(days) || 7;
+        const history = await getMoodHistory(userId, daysNum);
         res.json(history);
     } catch (err) {
         console.error("Error fetching mood history:", err);
@@ -40,3 +41,4 @@ router.get('/history', async (req, res) => {
 });
 
 module.exports = router;
+

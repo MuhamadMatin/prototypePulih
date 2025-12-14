@@ -88,12 +88,8 @@ function setupEventListeners() {
         document.getElementById('emergency-modal').classList.remove('flex');
     });
 
-    // Mobile Menu Logic
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenuDropdown = document.getElementById('mobile-menu-dropdown');
-    const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
-    const mobileNewChatBtn = document.getElementById('mobile-new-chat');
-    const mobileHistoryBtn = document.getElementById('mobile-history-btn');
+    // Mobile Sidebar Logic
+    const mobileSidebarBtn = document.getElementById('mobile-sidebar-btn');
     const sidebar = document.getElementById('chat-sidebar');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
     const closeSidebarBtn = document.getElementById('close-sidebar-btn');
@@ -110,13 +106,6 @@ function setupEventListeners() {
         }
     }
 
-    if (mobileHistoryBtn) {
-        mobileHistoryBtn.addEventListener('click', () => {
-            toggleSidebar(true);
-            mobileMenuDropdown.classList.add('hidden'); // Close menu
-        });
-    }
-
     if (closeSidebarBtn) {
         closeSidebarBtn.addEventListener('click', () => toggleSidebar(false));
     }
@@ -125,27 +114,10 @@ function setupEventListeners() {
         sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
     }
 
-    if (mobileMenuBtn && mobileMenuDropdown) {
-        mobileMenuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            mobileMenuDropdown.classList.toggle('hidden');
-            setTimeout(() => {
-                mobileMenuDropdown.classList.toggle('opacity-0');
-                mobileMenuDropdown.classList.toggle('scale-95');
-            }, 10);
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!mobileMenuDropdown.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-                mobileMenuDropdown.classList.add('opacity-0', 'scale-95');
-                setTimeout(() => mobileMenuDropdown.classList.add('hidden'), 200);
-            }
-        });
+    // Mobile hamburger button to open sidebar
+    if (mobileSidebarBtn) {
+        mobileSidebarBtn.addEventListener('click', () => toggleSidebar(true));
     }
-
-    if (mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', handleLogout);
-    if (mobileNewChatBtn) mobileNewChatBtn.addEventListener('click', startNewChat);
 
 
     sendBtn.addEventListener('click', sendMessage);

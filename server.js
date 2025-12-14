@@ -17,6 +17,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public')); // Serve frontend files
+app.use(express.static('data'));   // Serve data files (affirmations, etc.)
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -26,6 +27,13 @@ app.use('/api/mood', require('./server/routes/mood'));
 app.use('/api/journal', require('./server/routes/journal'));
 app.use('/api/utils', require('./server/routes/utils'));
 
+// New Feature Routes
+app.use('/api/assessment', require('./server/routes/assessment'));
+app.use('/api/achievements', require('./server/routes/achievements'));
+app.use('/api/safetyplan', require('./server/routes/safetyplan'));
+app.use('/api/grounding', require('./server/routes/grounding'));
+
 app.listen(PORT, () => {
    console.log(`Server running on http://localhost:${PORT}`);
 });
+

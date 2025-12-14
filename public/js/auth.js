@@ -32,6 +32,16 @@ function renderLogin() {
 
     document.getElementById('link-signup').addEventListener('click', renderSignup);
 
+    // Toggle Login Password Visibility
+    const toggleLoginPassBtn = document.getElementById('toggle-login-password');
+    const loginPassInput = document.getElementById('password');
+
+    toggleLoginPassBtn.addEventListener('click', () => {
+        const isPassword = loginPassInput.type === 'password';
+        loginPassInput.type = isPassword ? 'text' : 'password';
+        toggleLoginPassBtn.querySelector('span').textContent = isPassword ? 'visibility' : 'visibility_off';
+    });
+
     // Modal Elements
     const modal = document.getElementById('nickname-modal');
     const modalInput = document.getElementById('modal-nickname-input');

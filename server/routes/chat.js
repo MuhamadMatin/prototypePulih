@@ -112,17 +112,45 @@ router.post('/', async (req, res) => {
     const isCrisis = checkCrisis(message);
     const selectedSystemPrompt = isCrisis ? CRISIS_SYSTEM_PROMPT : NORMAL_SYSTEM_PROMPT;
 
-    // Fetch Context (Mood/Journal) if userId is present
+    // Fetch Context (Mood/Journal/Assessment) if userId is present
     let contextStr = "";
     if (userId) {
         try {
             const contextData = await getDataContext(userId);
             if (contextData) {
-                const { mood, journals } = contextData;
+                const { mood, journals, assessments } = contextData;
                 contextStr += "\n\n[CONTEXT DATA - USE THIS TO PERSONALIZE RESPONSE]\n";
+
+                // Mood context
                 if (mood) {
                     contextStr += `- Latest Mood (${new Date(mood.createdAt).toLocaleDateString()}): Level ${mood.moodLevel}/5. Note: "${mood.note || ''}"\n`;
                 }
+
+                // Assessment context (CRITICAL for personalization)
+                if (assessments) {
+                    if (assessments.phq9) {
+                        const phq = assessments.phq9;
+                        const severityLabels = { minimal: 'Minimal', mild: 'Ringan', moderate: 'Sedang', moderately_severe: 'Cukup Berat', severe: 'Berat' };
+                        contextStr += `- PHQ-9 Depression Assessment (${new Date(phq.createdAt).toLocaleDateString()}): Score ${phq.score}/27 - ${severityLabels[phq.severity] || phq.severity}. `;
+                        if (phq.score >= 15) {
+                            contextStr += "PENTING: User menunjukkan gejala depresi yang signifikan. Tunjukkan empati ekstra dan pertimbangkan untuk dengan lembut menyarankan bantuan profesional jika relevan.\n";
+                        } else {
+                            contextStr += "\n";
+                        }
+                    }
+                    if (assessments.gad7) {
+                        const gad = assessments.gad7;
+                        const severityLabels = { minimal: 'Minimal', mild: 'Ringan', moderate: 'Sedang', severe: 'Berat' };
+                        contextStr += `- GAD-7 Anxiety Assessment (${new Date(gad.createdAt).toLocaleDateString()}): Score ${gad.score}/21 - ${severityLabels[gad.severity] || gad.severity}. `;
+                        if (gad.score >= 10) {
+                            contextStr += "PENTING: User menunjukkan tingkat kecemasan yang tinggi. Pertimbangkan untuk menawarkan teknik grounding atau breathing jika relevan.\n";
+                        } else {
+                            contextStr += "\n";
+                        }
+                    }
+                }
+
+                // Journal context
                 if (journals && journals.length > 0) {
                     contextStr += `- Recent Journal Entries:\n`;
                     journals.forEach((j, i) => {

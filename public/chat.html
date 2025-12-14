@@ -65,6 +65,264 @@
         </div>
     </div>
 
+    <!-- Grounding Exercise Modal (5-4-3-2-1) -->
+    <div id="grounding-modal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-green-900/80 backdrop-blur-md p-4">
+        <div
+            class="bg-white dark:bg-surface-dark w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+            <!-- Header -->
+            <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 rounded-xl bg-green-100 dark:bg-green-900/30">
+                        <span class="material-symbols-outlined text-green-600">landscape</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-white">Latihan Grounding 5-4-3-2-1</h2>
+                </div>
+                <button class="close-modal p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                    data-target="grounding-modal">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <!-- Content -->
+            <div class="p-6 flex-1 overflow-y-auto">
+                <!-- Intro View -->
+                <div id="grounding-intro" class="text-center py-8">
+                    <div
+                        class="size-24 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center mx-auto mb-6 shadow-xl">
+                        <span class="material-symbols-outlined text-5xl text-white">self_improvement</span>
+                    </div>
+                    <h3 class="text-2xl font-black text-gray-800 dark:text-white mb-3">Teknik Grounding 5-4-3-2-1</h3>
+                    <p class="text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-8">
+                        Latihan ini akan membantu kamu terhubung kembali dengan saat ini melalui 5 indera.
+                        Sangat efektif untuk mengatasi kecemasan dan flashback.
+                    </p>
+                    <button id="btn-start-grounding"
+                        class="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all">
+                        Mulai Latihan
+                    </button>
+                </div>
+
+                <!-- Exercise View -->
+                <div id="grounding-exercise" class="hidden">
+                    <div id="grounding-progress" class="flex gap-2 mb-6"></div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span id="grounding-step-indicator" class="text-sm text-gray-400">1 / 5</span>
+                    </div>
+                    <div id="grounding-content"></div>
+                </div>
+
+                <!-- Complete View -->
+                <div id="grounding-complete" class="hidden text-center py-8">
+                    <div
+                        class="size-24 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center mx-auto mb-6 shadow-xl animate-bounce">
+                        <span class="material-symbols-outlined text-5xl text-white">check_circle</span>
+                    </div>
+                    <h3 class="text-2xl font-black text-gray-800 dark:text-white mb-3">Selesai! 🌟</h3>
+                    <div id="grounding-summary" class="text-gray-500 mb-8"></div>
+                    <button class="close-modal px-8 py-3 bg-primary text-black font-bold rounded-2xl"
+                        data-target="grounding-modal">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer (Navigation) -->
+            <div id="grounding-nav" class="p-4 border-t border-gray-100 dark:border-gray-800 flex justify-between">
+                <button id="btn-grounding-back" class="invisible px-4 py-2 text-gray-500 hover:bg-gray-100 rounded-xl">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <button id="btn-grounding-skip"
+                    class="px-4 py-2 text-gray-400 hover:text-gray-600 text-sm">Skip</button>
+                <button id="btn-grounding-next"
+                    class="px-6 py-2 bg-primary text-black font-bold rounded-xl">Lanjut</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Self-Assessment Modal (PHQ-9 / GAD-7) -->
+    <div id="assessment-modal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+        <div
+            class="bg-white dark:bg-surface-dark w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+            <!-- Header -->
+            <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 rounded-xl bg-pink-100 dark:bg-pink-900/30">
+                        <span class="material-symbols-outlined text-pink-600">psychology</span>
+                    </div>
+                    <h2 id="assessment-title" class="text-xl font-bold text-gray-800 dark:text-white">Self-Assessment
+                    </h2>
+                </div>
+                <button class="close-modal p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                    data-target="assessment-modal">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <!-- Content -->
+            <div class="p-6 flex-1 overflow-y-auto">
+                <!-- Select Type View -->
+                <div id="assessment-select" class="text-center py-8">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Pilih Jenis Assessment</h3>
+                    <p class="text-gray-500 dark:text-gray-400 mb-8">Kuesioner ini membantu mengukur kondisi kesehatan
+                        mentalmu.</p>
+
+                    <div class="grid md:grid-cols-2 gap-4 max-w-lg mx-auto">
+                        <button id="btn-phq9"
+                            class="p-6 rounded-2xl border-2 border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 hover:border-blue-400 transition-all text-left">
+                            <span class="text-3xl mb-2 block">😔</span>
+                            <h4 class="font-bold text-gray-800 dark:text-white">PHQ-9</h4>
+                            <p class="text-xs text-gray-500">Kuesioner Depresi (9 pertanyaan)</p>
+                        </button>
+                        <button id="btn-gad7"
+                            class="p-6 rounded-2xl border-2 border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/20 hover:border-purple-400 transition-all text-left">
+                            <span class="text-3xl mb-2 block">😰</span>
+                            <h4 class="font-bold text-gray-800 dark:text-white">GAD-7</h4>
+                            <p class="text-xs text-gray-500">Kuesioner Kecemasan (7 pertanyaan)</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Question View -->
+                <div id="assessment-question" class="hidden">
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <span id="assessment-progress-text" class="text-sm text-gray-400">1 dari 9</span>
+                        </div>
+                        <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div id="assessment-progress-bar" class="h-full bg-primary transition-all duration-300"
+                                style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div id="assessment-question-content"></div>
+                </div>
+
+                <!-- Result View -->
+                <div id="assessment-result" class="hidden">
+                    <div id="assessment-result-content"></div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="p-4 border-t border-gray-100 dark:border-gray-800 flex justify-between">
+                <button id="btn-assessment-back" class="invisible px-4 py-2 text-gray-500 hover:bg-gray-100 rounded-xl">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <button id="btn-assessment-restart"
+                    class="hidden px-4 py-2 text-gray-500 hover:bg-gray-100 rounded-xl text-sm">Ulangi</button>
+                <button id="btn-assessment-next"
+                    class="hidden px-6 py-2 bg-primary text-black font-bold rounded-xl">Lanjut</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Dashboard Modal -->
+    <div id="progress-modal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+        <div
+            class="bg-white dark:bg-surface-dark w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+            <!-- Header -->
+            <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 rounded-xl bg-cyan-100 dark:bg-cyan-900/30">
+                        <span class="material-symbols-outlined text-cyan-600">trending_up</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-white">Progress Dashboard</h2>
+                </div>
+                <button class="close-modal p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                    data-target="progress-modal">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <!-- Tabs -->
+            <div class="px-6 pt-4 flex gap-2 overflow-x-auto">
+                <button class="progress-tab px-4 py-2 rounded-xl text-sm font-medium bg-primary text-black"
+                    data-tab="mood">📊 Mood</button>
+                <button
+                    class="progress-tab px-4 py-2 rounded-xl text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-600"
+                    data-tab="achievements">🏆 Achievements</button>
+                <button
+                    class="progress-tab px-4 py-2 rounded-xl text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-600"
+                    data-tab="assessments">📋 Assessments</button>
+                <button
+                    class="progress-tab px-4 py-2 rounded-xl text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-600"
+                    data-tab="streak">🔥 Streak</button>
+            </div>
+
+            <!-- Content -->
+            <div class="p-6 flex-1 overflow-y-auto">
+                <!-- Mood Tab -->
+                <div id="progress-mood" class="progress-content">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-gray-800 dark:text-white">Grafik Mood</h3>
+                        <select id="progress-range"
+                            class="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
+                            <option value="7">7 Hari</option>
+                            <option value="30" selected>30 Hari</option>
+                            <option value="90">90 Hari</option>
+                        </select>
+                    </div>
+                    <div class="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-4 mb-6" style="height: 250px;">
+                        <canvas id="progress-mood-chart"></canvas>
+                    </div>
+                    <div id="progress-mood-stats"></div>
+                </div>
+
+                <!-- Achievements Tab -->
+                <div id="progress-achievements" class="progress-content hidden"></div>
+
+                <!-- Assessments Tab -->
+                <div id="progress-assessments" class="progress-content hidden"></div>
+
+                <!-- Streak Tab -->
+                <div id="progress-streak" class="progress-content hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Safety Plan Modal -->
+    <div id="safetyplan-modal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+        <div
+            class="bg-white dark:bg-surface-dark w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+            <!-- Header -->
+            <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 rounded-xl bg-red-100 dark:bg-red-900/30">
+                        <span class="material-symbols-outlined text-red-600">shield</span>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800 dark:text-white">Safety Plan</h2>
+                        <p class="text-xs text-gray-500">Rencana keselamatan pribadi</p>
+                    </div>
+                </div>
+                <button class="close-modal p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                    data-target="safetyplan-modal">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <!-- Content -->
+            <div class="p-6 flex-1 overflow-y-auto">
+                <div id="safetyplan-content" class="space-y-6"></div>
+            </div>
+
+            <!-- Footer -->
+            <div class="p-4 border-t border-gray-100 dark:border-gray-800 flex justify-between">
+                <button id="btn-export-safetyplan"
+                    class="px-4 py-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">print</span>
+                    <span class="text-sm">Export</span>
+                </button>
+                <button id="btn-save-safetyplan"
+                    class="px-6 py-2 bg-primary text-black font-bold rounded-xl">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Mood Modal -->
     <div id="mood-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm p-4">
         <div class="glass-modal w-full max-w-lg rounded-3xl p-6 shadow-xl border border-white/20">
@@ -273,6 +531,12 @@
                                 Pulih</h1>
                         </div>
                     </div>
+                    <!-- Close sidebar button for mobile -->
+                    <button id="close-sidebar-btn"
+                        class="md:hidden p-2 rounded-full text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+                        title="Tutup">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
                 </div>
                 <!-- New Chat Button -->
                 <button id="btn-new-chat"
@@ -282,41 +546,76 @@
                 </button>
             </div>
 
-            <!-- Self Care Tools Menu -->
-            <div class="px-6 mb-4">
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Self Care</h3>
-                <div class="grid grid-cols-3 gap-2">
+            <!-- Self Care Tools Menu - Compact for mobile -->
+            <div class="px-4 md:px-6 mb-2 md:mb-4">
+                <h3 class="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 md:mb-3">Self
+                    Care</h3>
+                <div class="grid grid-cols-3 gap-1.5 md:gap-2">
                     <button id="btn-mood"
-                        class="flex flex-col items-center justify-center p-3 rounded-xl bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 transition-colors gap-1 border border-orange-100 dark:border-orange-900/30">
-                        <span class="text-xl">😊</span>
-                        <span class="text-[10px] font-medium text-orange-700 dark:text-orange-300">Mood</span>
+                        class="flex flex-col items-center justify-center p-2 md:p-3 rounded-xl bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 transition-colors gap-0.5 md:gap-1 border border-orange-100 dark:border-orange-900/30">
+                        <span class="text-lg md:text-xl">😊</span>
+                        <span
+                            class="text-[9px] md:text-[10px] font-medium text-orange-700 dark:text-orange-300">Mood</span>
                     </button>
                     <button id="btn-journal"
-                        class="flex flex-col items-center justify-center p-3 rounded-xl bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 transition-colors gap-1 border border-purple-100 dark:border-purple-900/30">
-                        <span class="text-xl">📔</span>
-                        <span class="text-[10px] font-medium text-purple-700 dark:text-purple-300">Jurnal</span>
+                        class="flex flex-col items-center justify-center p-2 md:p-3 rounded-xl bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 transition-colors gap-0.5 md:gap-1 border border-purple-100 dark:border-purple-900/30">
+                        <span class="text-lg md:text-xl">📔</span>
+                        <span
+                            class="text-[9px] md:text-[10px] font-medium text-purple-700 dark:text-purple-300">Jurnal</span>
                     </button>
                     <button id="btn-breathing"
-                        class="flex flex-col items-center justify-center p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 transition-colors gap-1 border border-blue-100 dark:border-blue-900/30">
-                        <span class="text-xl">🌬️</span>
-                        <span class="text-[10px] font-medium text-blue-700 dark:text-blue-300">Napas</span>
+                        class="flex flex-col items-center justify-center p-2 md:p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 transition-colors gap-0.5 md:gap-1 border border-blue-100 dark:border-blue-900/30">
+                        <span class="text-lg md:text-xl">🌬️</span>
+                        <span
+                            class="text-[9px] md:text-[10px] font-medium text-blue-700 dark:text-blue-300">Napas</span>
+                    </button>
+                    <button id="btn-grounding"
+                        class="flex flex-col items-center justify-center p-2 md:p-3 rounded-xl bg-green-50 dark:bg-green-900/20 hover:bg-green-100 transition-colors gap-0.5 md:gap-1 border border-green-100 dark:border-green-900/30">
+                        <span class="text-lg md:text-xl">🌿</span>
+                        <span
+                            class="text-[9px] md:text-[10px] font-medium text-green-700 dark:text-green-300">Grounding</span>
+                    </button>
+                    <button id="btn-assessment"
+                        class="flex flex-col items-center justify-center p-2 md:p-3 rounded-xl bg-pink-50 dark:bg-pink-900/20 hover:bg-pink-100 transition-colors gap-0.5 md:gap-1 border border-pink-100 dark:border-pink-900/30">
+                        <span class="text-lg md:text-xl">📊</span>
+                        <span
+                            class="text-[9px] md:text-[10px] font-medium text-pink-700 dark:text-pink-300">Self-Test</span>
+                    </button>
+                    <button id="btn-progress"
+                        class="flex flex-col items-center justify-center p-2 md:p-3 rounded-xl bg-cyan-50 dark:bg-cyan-900/20 hover:bg-cyan-100 transition-colors gap-0.5 md:gap-1 border border-cyan-100 dark:border-cyan-900/30">
+                        <span class="text-lg md:text-xl">📈</span>
+                        <span
+                            class="text-[9px] md:text-[10px] font-medium text-cyan-700 dark:text-cyan-300">Progress</span>
                     </button>
                 </div>
-                <!-- Daily Affirmation Tiny Card -->
-                <div
-                    class="mt-4 p-3 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-100 dark:border-green-800">
-                    <p id="affirmation-container" class="text-xs italic text-center text-text-main dark:text-gray-300">
-                        "Memuat kata bijak..."</p>
+                <!-- Streak & Affirmation combined row for mobile -->
+                <div class="flex gap-2 mt-2">
+                    <div
+                        class="flex-1 flex items-center justify-between p-1.5 md:p-2 rounded-lg md:rounded-xl bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border border-orange-100 dark:border-orange-800">
+                        <span
+                            class="material-symbols-outlined text-orange-500 text-base md:text-lg">local_fire_department</span>
+                        <div id="streak-counter"
+                            class="flex items-center gap-0.5 text-xs md:text-sm font-bold text-orange-600">
+                            <span>0</span>
+                        </div>
+                    </div>
+                    <div
+                        class="flex-[2] p-1.5 md:p-3 rounded-lg md:rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-100 dark:border-green-800">
+                        <p id="affirmation-container"
+                            class="text-[10px] md:text-xs italic text-center text-text-main dark:text-gray-300 line-clamp-2">
+                            "Memuat..."</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="px-6">
+            <div class="px-4 md:px-6">
                 <div class="h-px bg-gradient-to-r from-transparent via-green-100 dark:via-green-800 to-transparent">
                 </div>
             </div>
 
-            <!-- History List -->
-            <div id="history-container" class="flex-1 overflow-y-auto px-4 py-4 space-y-8">
+            <!-- History List - Improved scroll area for mobile -->
+            <div id="history-container"
+                class="flex-1 min-h-0 overflow-y-auto px-3 md:px-4 py-3 md:py-4 space-y-2 md:space-y-8 overscroll-contain">
                 <div class="flex flex-col gap-2">
                     <p class="text-center text-xs text-text-muted mt-4">Memuat riwayat...</p>
                 </div>
@@ -413,29 +712,12 @@
                         <span class="material-symbols-outlined">flag</span>
                     </button>
 
-                    <button id="mobile-menu-btn"
-                        class="md:hidden p-2 rounded-full text-text-muted hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
-                        <span class="material-symbols-outlined">more_vert</span>
+                    <!-- Mobile Hamburger to open sidebar -->
+                    <button id="mobile-sidebar-btn"
+                        class="md:hidden p-2 rounded-full text-text-muted hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+                        title="Menu">
+                        <span class="material-symbols-outlined">menu</span>
                     </button>
-
-                    <!-- Dropdown Menu -->
-                    <div id="mobile-menu-dropdown"
-                        class="hidden absolute top-full right-0 mt-2 w-48 bg-white dark:bg-surface-dark border border-gray-100 dark:border-gray-800 rounded-2xl shadow-xl overflow-hidden z-50 origin-top-right transition-all transform scale-95 opacity-0">
-                        <div class="p-1">
-                            <button id="mobile-export-chat"
-                                class="w-full text-left px-4 py-3 text-sm text-text-main dark:text-gray-200 hover:bg-green-50 dark:hover:bg-white/5 rounded-xl flex items-center gap-2">
-                                <span class="material-symbols-outlined text-[18px]">download</span> Expor Chat
-                            </button>
-                            <button id="mobile-new-chat"
-                                class="w-full text-left px-4 py-3 text-sm text-text-main dark:text-gray-200 hover:bg-green-50 dark:hover:bg-white/5 rounded-xl flex items-center gap-2">
-                                <span class="material-symbols-outlined text-[18px]">add_comment</span> Sesi Baru
-                            </button>
-                            <button id="mobile-logout-btn"
-                                class="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl flex items-center gap-2">
-                                <span class="material-symbols-outlined text-[18px]">logout</span> Keluar
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </header>
 

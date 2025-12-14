@@ -1,0 +1,271 @@
+{
+    "achievements": [
+        {
+            "id": "first_chat",
+            "name": "Langkah Pertama",
+            "description": "Memulai percakapan pertama dengan Pulih",
+            "icon": "chat",
+            "color": "emerald",
+            "trigger": "chat_count",
+            "threshold": 1
+        },
+        {
+            "id": "chatty",
+            "name": "Teman Bicara",
+            "description": "Melakukan 10 sesi percakapan",
+            "icon": "forum",
+            "color": "blue",
+            "trigger": "chat_count",
+            "threshold": 10
+        },
+        {
+            "id": "first_mood",
+            "name": "Sadar Perasaan",
+            "description": "Mencatat mood pertama kali",
+            "icon": "sentiment_satisfied",
+            "color": "orange",
+            "trigger": "mood_count",
+            "threshold": 1
+        },
+        {
+            "id": "mood_tracker",
+            "name": "Pemantau Mood",
+            "description": "Mencatat mood 7 hari berturut-turut",
+            "icon": "monitoring",
+            "color": "amber",
+            "trigger": "mood_streak",
+            "threshold": 7
+        },
+        {
+            "id": "mood_master",
+            "name": "Master Mood",
+            "description": "Mencatat mood 30 hari berturut-turut",
+            "icon": "workspace_premium",
+            "color": "yellow",
+            "trigger": "mood_streak",
+            "threshold": 30
+        },
+        {
+            "id": "first_journal",
+            "name": "Penulis Pemula",
+            "description": "Menulis entri jurnal pertama",
+            "icon": "edit_note",
+            "color": "purple",
+            "trigger": "journal_count",
+            "threshold": 1
+        },
+        {
+            "id": "journal_keeper",
+            "name": "Penjaga Kisah",
+            "description": "Menulis 10 entri jurnal",
+            "icon": "auto_stories",
+            "color": "violet",
+            "trigger": "journal_count",
+            "threshold": 10
+        },
+        {
+            "id": "journal_master",
+            "name": "Master Jurnal",
+            "description": "Menulis 50 entri jurnal",
+            "icon": "menu_book",
+            "color": "indigo",
+            "trigger": "journal_count",
+            "threshold": 50
+        },
+        {
+            "id": "first_breath",
+            "name": "Napas Pertama",
+            "description": "Menyelesaikan latihan napas pertama",
+            "icon": "self_improvement",
+            "color": "cyan",
+            "trigger": "breathing_count",
+            "threshold": 1
+        },
+        {
+            "id": "zen_master",
+            "name": "Master Zen",
+            "description": "Menyelesaikan 10 latihan napas",
+            "icon": "spa",
+            "color": "teal",
+            "trigger": "breathing_count",
+            "threshold": 10
+        },
+        {
+            "id": "first_grounding",
+            "name": "Membumi",
+            "description": "Menyelesaikan latihan grounding pertama",
+            "icon": "landscape",
+            "color": "green",
+            "trigger": "grounding_count",
+            "threshold": 1
+        },
+        {
+            "id": "grounding_pro",
+            "name": "Pro Grounding",
+            "description": "Menyelesaikan 10 latihan grounding",
+            "icon": "forest",
+            "color": "lime",
+            "trigger": "grounding_count",
+            "threshold": 10
+        },
+        {
+            "id": "streak_3",
+            "name": "Konsisten",
+            "description": "Login 3 hari berturut-turut",
+            "icon": "local_fire_department",
+            "color": "orange",
+            "trigger": "login_streak",
+            "threshold": 3
+        },
+        {
+            "id": "streak_7",
+            "name": "Seminggu Penuh",
+            "description": "Login 7 hari berturut-turut",
+            "icon": "whatshot",
+            "color": "red",
+            "trigger": "login_streak",
+            "threshold": 7
+        },
+        {
+            "id": "streak_30",
+            "name": "Sebulan Komitmen",
+            "description": "Login 30 hari berturut-turut",
+            "icon": "military_tech",
+            "color": "amber",
+            "trigger": "login_streak",
+            "threshold": 30
+        },
+        {
+            "id": "first_assessment",
+            "name": "Kenali Diri",
+            "description": "Menyelesaikan assessment pertama",
+            "icon": "psychology",
+            "color": "pink",
+            "trigger": "assessment_count",
+            "threshold": 1
+        },
+        {
+            "id": "safety_planner",
+            "name": "Perencana Keselamatan",
+            "description": "Membuat safety plan",
+            "icon": "shield",
+            "color": "rose",
+            "trigger": "safety_plan_created",
+            "threshold": 1
+        },
+        {
+            "id": "night_owl",
+            "name": "Burung Hantu",
+            "description": "Menggunakan Pulih di tengah malam (00:00 - 04:00)",
+            "icon": "nights_stay",
+            "color": "slate",
+            "trigger": "time_based",
+            "condition": "night"
+        },
+        {
+            "id": "early_bird",
+            "name": "Burung Pagi",
+            "description": "Menggunakan Pulih di pagi hari (05:00 - 07:00)",
+            "icon": "wb_twilight",
+            "color": "sky",
+            "trigger": "time_based",
+            "condition": "morning"
+        },
+        {
+            "id": "explorer",
+            "name": "Penjelajah",
+            "description": "Mencoba semua fitur self-care",
+            "icon": "explore",
+            "color": "emerald",
+            "trigger": "all_features_used",
+            "threshold": 1
+        }
+    ],
+    "colorMap": {
+        "emerald": {
+            "bg": "bg-emerald-100 dark:bg-emerald-900/30",
+            "text": "text-emerald-600 dark:text-emerald-400",
+            "border": "border-emerald-200 dark:border-emerald-800"
+        },
+        "blue": {
+            "bg": "bg-blue-100 dark:bg-blue-900/30",
+            "text": "text-blue-600 dark:text-blue-400",
+            "border": "border-blue-200 dark:border-blue-800"
+        },
+        "orange": {
+            "bg": "bg-orange-100 dark:bg-orange-900/30",
+            "text": "text-orange-600 dark:text-orange-400",
+            "border": "border-orange-200 dark:border-orange-800"
+        },
+        "amber": {
+            "bg": "bg-amber-100 dark:bg-amber-900/30",
+            "text": "text-amber-600 dark:text-amber-400",
+            "border": "border-amber-200 dark:border-amber-800"
+        },
+        "yellow": {
+            "bg": "bg-yellow-100 dark:bg-yellow-900/30",
+            "text": "text-yellow-600 dark:text-yellow-400",
+            "border": "border-yellow-200 dark:border-yellow-800"
+        },
+        "purple": {
+            "bg": "bg-purple-100 dark:bg-purple-900/30",
+            "text": "text-purple-600 dark:text-purple-400",
+            "border": "border-purple-200 dark:border-purple-800"
+        },
+        "violet": {
+            "bg": "bg-violet-100 dark:bg-violet-900/30",
+            "text": "text-violet-600 dark:text-violet-400",
+            "border": "border-violet-200 dark:border-violet-800"
+        },
+        "indigo": {
+            "bg": "bg-indigo-100 dark:bg-indigo-900/30",
+            "text": "text-indigo-600 dark:text-indigo-400",
+            "border": "border-indigo-200 dark:border-indigo-800"
+        },
+        "cyan": {
+            "bg": "bg-cyan-100 dark:bg-cyan-900/30",
+            "text": "text-cyan-600 dark:text-cyan-400",
+            "border": "border-cyan-200 dark:border-cyan-800"
+        },
+        "teal": {
+            "bg": "bg-teal-100 dark:bg-teal-900/30",
+            "text": "text-teal-600 dark:text-teal-400",
+            "border": "border-teal-200 dark:border-teal-800"
+        },
+        "green": {
+            "bg": "bg-green-100 dark:bg-green-900/30",
+            "text": "text-green-600 dark:text-green-400",
+            "border": "border-green-200 dark:border-green-800"
+        },
+        "lime": {
+            "bg": "bg-lime-100 dark:bg-lime-900/30",
+            "text": "text-lime-600 dark:text-lime-400",
+            "border": "border-lime-200 dark:border-lime-800"
+        },
+        "red": {
+            "bg": "bg-red-100 dark:bg-red-900/30",
+            "text": "text-red-600 dark:text-red-400",
+            "border": "border-red-200 dark:border-red-800"
+        },
+        "pink": {
+            "bg": "bg-pink-100 dark:bg-pink-900/30",
+            "text": "text-pink-600 dark:text-pink-400",
+            "border": "border-pink-200 dark:border-pink-800"
+        },
+        "rose": {
+            "bg": "bg-rose-100 dark:bg-rose-900/30",
+            "text": "text-rose-600 dark:text-rose-400",
+            "border": "border-rose-200 dark:border-rose-800"
+        },
+        "slate": {
+            "bg": "bg-slate-100 dark:bg-slate-900/30",
+            "text": "text-slate-600 dark:text-slate-400",
+            "border": "border-slate-200 dark:border-slate-800"
+        },
+        "sky": {
+            "bg": "bg-sky-100 dark:bg-sky-900/30",
+            "text": "text-sky-600 dark:text-sky-400",
+            "border": "border-sky-200 dark:border-sky-800"
+        }
+    }
+}

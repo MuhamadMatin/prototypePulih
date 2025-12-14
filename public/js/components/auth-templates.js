@@ -27,7 +27,7 @@ export const loginFormHTML = `
                     <div class="absolute left-4 top-3 text-gray-400 group-focus-within:text-primary transition-colors">
                         <span class="material-symbols-outlined text-[20px]">lock</span>
                     </div>
-                    <button class="absolute right-4 top-3 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors focus:outline-none" type="button">
+                    <button id="toggle-login-password" class="absolute right-4 top-3 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors focus:outline-none" type="button">
                         <span class="material-symbols-outlined text-[20px]">visibility_off</span>
                     </button>
                 </div>

@@ -149,9 +149,34 @@ async function getDataContext(userId) {
         'SELECT * FROM journal_entries WHERE userId = ? ORDER BY createdAt DESC LIMIT 3',
         [userId]
     );
+
+    // Get latest assessments (PHQ-9 and GAD-7)
+    let latestPHQ9 = null;
+    let latestGAD7 = null;
+    try {
+        const [phq9Results] = await pool.execute(
+            'SELECT * FROM assessments WHERE userId = ? AND type = ? ORDER BY createdAt DESC LIMIT 1',
+            [userId, 'PHQ9']
+        );
+        latestPHQ9 = phq9Results[0] || null;
+
+        const [gad7Results] = await pool.execute(
+            'SELECT * FROM assessments WHERE userId = ? AND type = ? ORDER BY createdAt DESC LIMIT 1',
+            [userId, 'GAD7']
+        );
+        latestGAD7 = gad7Results[0] || null;
+    } catch (err) {
+        // Table might not exist yet, ignore error
+        console.log('Note: assessments table may not exist yet');
+    }
+
     return {
         mood: moods[0] || null,
-        journals: journals || []
+        journals: journals || [],
+        assessments: {
+            phq9: latestPHQ9,
+            gad7: latestGAD7
+        }
     };
 }
 
