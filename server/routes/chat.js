@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const { createChat, updateChat, getChatsByUserId, getChatById, getDataContext } = require('../utils/db');
-const SYSTEM_PROMPT = require('../utils/systemPrompt');
+const { NORMAL_SYSTEM_PROMPT, CRISIS_SYSTEM_PROMPT } = require('../utils/systemPrompt');
 
 require('dotenv').config();
 
