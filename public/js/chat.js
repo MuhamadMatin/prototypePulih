@@ -325,7 +325,7 @@ async function sendMessage() {
 
     } catch (e) {
         console.error("Chat error", e);
-        contentDiv.innerHTML += "\n\n[Koneksi Terputus]";
+        contentDiv.innerHTML += `\n\n[Error: ${e.message || 'Unknown Error'}]`;
     }
 }
 
