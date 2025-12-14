@@ -1,5 +1,6 @@
 import { fetchChatHistory, saveSessionToBackend, fetchSuggestions, initiateChatStream } from './services/chat-service.js';
 import { initDashboard } from './dashboard.js';
+import { VoiceRecorder } from './modules/VoiceRecorder.js';
 
 const chatStream = document.getElementById('chat-stream');
 const chatInput = document.getElementById('chat-input');
@@ -13,6 +14,7 @@ const CRISIS_KEYWORDS = ["bunuh diri", "ingin mati", "lukai diri", "tidak kuat l
 let currentUser = JSON.parse(localStorage.getItem('user'));
 let messageHistory = [];
 let currentSessionId = null;
+let voiceRecorder = null; // Voice Recorder instance
 
 if (!currentUser) {
     window.location.href = 'index.html';
@@ -25,6 +27,13 @@ function init() {
     loadHistory();
     setupEventListeners();
     initDashboard(); // Initialize Dashboard features
+
+    // Initialize Voice Recorder (Voice-to-Text)
+    voiceRecorder = new VoiceRecorder('#btn-voice', '#chat-input', {
+        lang: 'id-ID',
+        continuous: false,
+        interimResults: true
+    });
 }
 
 function setupSidebar() {

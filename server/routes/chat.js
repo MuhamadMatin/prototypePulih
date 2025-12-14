@@ -31,6 +31,38 @@ router.post('/session', async (req, res) => {
     if (!userId) return res.status(400).json({ error: "User ID required" });
 
     try {
+        // IMPORTANT: Check if user exists in database before creating chat
+        // This prevents foreign key constraint errors
+        const { findUserById, createUser } = require('../utils/db');
+        let user = await findUserById(userId);
+
+        // If user doesn't exist, create a placeholder user
+        // This handles cases where localStorage has a user that's not in the DB
+        if (!user) {
+            console.log(`User ${userId} not found in DB, creating placeholder...`);
+            try {
+                await createUser({
+                    id: userId,
+                    username: null,
+                    fullName: 'User',
+                    email: null,
+                    password: 'auto-generated',
+                    nickname: null,
+                    joinedDate: new Date(),
+                    isAnonymous: true
+                });
+                console.log(`Placeholder user ${userId} created successfully`);
+            } catch (createErr) {
+                // If user creation fails (e.g., duplicate), try to find again
+                console.warn('Failed to create placeholder user:', createErr.message);
+                user = await findUserById(userId);
+                if (!user) {
+                    // If still not found, return error
+                    return res.status(400).json({ error: "Unable to verify user. Please re-login." });
+                }
+            }
+        }
+
         let session;
         if (sessionId) {
             session = await getChatById(sessionId);

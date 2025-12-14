@@ -118,3 +118,28 @@ body {
         transform: scale(1);
     }
 }
+
+/* Voice Recorder - Recording Animation */
+.is-recording {
+    color: #ef4444 !important;
+    animation: heartbeat 1.5s infinite;
+}
+
+.is-recording .material-symbols-outlined {
+    transform-origin: center;
+}
+
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
