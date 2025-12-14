@@ -22,6 +22,9 @@ app.use(express.static('public')); // Serve frontend files
 app.use('/api/auth', authRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/mood', require('./server/routes/mood'));
+app.use('/api/journal', require('./server/routes/journal'));
+app.use('/api/utils', require('./server/routes/utils'));
 
 app.listen(PORT, () => {
    console.log(`Server running on http://localhost:${PORT}`);

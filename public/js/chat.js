@@ -1,10 +1,14 @@
 import { fetchChatHistory, saveSessionToBackend, fetchSuggestions, initiateChatStream } from './services/chat-service.js';
+import { initDashboard } from './dashboard.js';
 
 const chatStream = document.getElementById('chat-stream');
 const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-btn');
 const historyContainer = document.getElementById('history-container');
 const logoutBtn = document.getElementById('logout-btn');
+
+// Constants
+const CRISIS_KEYWORDS = ["bunuh diri", "ingin mati", "lukai diri", "tidak kuat lagi", "akhiri hidup", "gantung diri", "minum racun"];
 
 let currentUser = JSON.parse(localStorage.getItem('user'));
 let messageHistory = [];
@@ -20,6 +24,7 @@ function init() {
     setupSidebar();
     loadHistory();
     setupEventListeners();
+    initDashboard(); // Initialize Dashboard features
 }
 
 function setupSidebar() {
@@ -33,6 +38,46 @@ function setupEventListeners() {
 
     // Desktop New Chat
     document.getElementById('btn-new-chat').addEventListener('click', startNewChat);
+
+    // Utilities
+    document.getElementById('btn-toggle-blur')?.addEventListener('click', () => {
+        document.body.classList.toggle('blur-mode-active');
+        const btn = document.getElementById('btn-toggle-blur');
+        btn.querySelector('span').innerText = document.body.classList.contains('blur-mode-active') ? 'visibility' : 'visibility_off';
+    });
+
+    const exportHandler = () => {
+        const content = messageHistory.map(m => `${m.role.toUpperCase()}: ${m.content}`).join('\n\n');
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `chat-pulih-${new Date().toISOString().slice(0, 10)}.txt`;
+        a.click();
+    };
+    document.getElementById('btn-export-chat')?.addEventListener('click', exportHandler);
+    document.getElementById('mobile-export-chat')?.addEventListener('click', exportHandler);
+
+    document.getElementById('btn-end-session')?.addEventListener('click', async () => {
+        if (!currentSessionId) return alert('Belum ada sesi aktif.');
+        if (!confirm('Akhiri sesi dan buat ringkasan?')) return;
+
+        try {
+            const res = await fetch('/api/chat/summary', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sessionId: currentSessionId })
+            });
+            const data = await res.json();
+            appendMessage(`**Ringkasan Sesi:**\n\n${data.summary}`, 'bot');
+        } catch (e) { alert('Gagal membuat ringkasan'); }
+    });
+
+    // Emergency Modal
+    document.getElementById('btn-curhat-emergency')?.addEventListener('click', () => {
+        document.getElementById('emergency-modal').classList.add('hidden');
+        document.getElementById('emergency-modal').classList.remove('flex');
+    });
 
     // Mobile Menu Logic
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -199,16 +244,29 @@ function loadSession(session) {
     });
 }
 
+function checkCrisis(text) {
+    if (!text) return false;
+    const lower = text.toLowerCase();
+    return CRISIS_KEYWORDS.some(k => lower.includes(k));
+}
+
 async function sendMessage() {
     const text = chatInput.value.trim();
     if (!text) return;
+
+    if (checkCrisis(text)) {
+        const modal = document.getElementById('emergency-modal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        return;
+    }
 
     appendMessage(text, 'user');
     chatInput.value = '';
     chatInput.style.height = 'auto';
     chatInput.focus();
 
-    const botMsgDiv = appendMessage('', 'bot', true);
+    const botMsgDiv = appendMessage('', 'bot', true); // Show loading
     const contentDiv = botMsgDiv.querySelector('.markdown-content');
 
     let fullReply = "";
@@ -231,6 +289,22 @@ async function sendMessage() {
 
             for (const line of lines) {
                 const trimmed = line.trim();
+                const jsonStart = trimmed.indexOf('{');
+
+                // Check if it's the crisis JSON from backend (fallback)
+                if (trimmed.startsWith('{') && trimmed.includes('"isCrisis":true')) {
+                    try {
+                        const json = JSON.parse(trimmed);
+                        if (json.isCrisis) {
+                            const modal = document.getElementById('emergency-modal');
+                            modal.classList.remove('hidden');
+                            modal.classList.add('flex');
+                            contentDiv.innerHTML = "Maaf, saya tidak dapat melanjutkan percakapan ini karena alasan keamanan.";
+                            return;
+                        }
+                    } catch (e) { }
+                }
+
                 if (trimmed.startsWith('data:')) {
                     const dataStr = trimmed.replace('data:', '').trim();
                     if (dataStr === '[DONE]') continue;
@@ -317,7 +391,7 @@ function appendMessage(text, sender, returnElement = false) {
                 <div class="bg-soft-gradient dark:bg-none bg-white dark:bg-surface-dark p-5 chat-bubble-bot shadow-sm text-text-main dark:text-gray-100 leading-relaxed border border-green-50 dark:border-green-900 relative">
                     <span class="material-symbols-outlined absolute right-2 top-2 text-green-50 dark:text-green-900 text-4xl -z-0 opacity-50 rotate-12">spa</span>
                     <div class="font-body relative z-10 markdown-content break-words">
-                        ${text ? marked.parse(text) : '<span class="typing-dot-static">...</span>'}
+                        ${text ? marked.parse(text) : '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>'}
                     </div>
                 </div>
             </div>

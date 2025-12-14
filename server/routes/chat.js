@@ -57,12 +57,31 @@ router.post('/session', async (req, res) => {
     }
 });
 
+// Crisis Detection
+const CRISIS_KEYWORDS = [
+    "bunuh diri", "ingin mati", "akhiri hidup", "lukai diri", "tidak kuat lagi", "gantung diri", "minum racun", "lompat dari", "iris nadi", "potong nadi"
+];
+
+function checkCrisis(text) {
+    if (!text) return false;
+    const lower = text.toLowerCase();
+    return CRISIS_KEYWORDS.some(k => lower.includes(k));
+}
+
 // Chat Completion
 router.post('/', async (req, res) => {
     const { message, history, userId, sessionId } = req.body;
 
     if (!message) {
         return res.status(400).json({ error: "Message is required" });
+    }
+
+    // Crisis Check
+    if (checkCrisis(message)) {
+        return res.json({
+            isCrisis: true,
+            message: "Sistem mendeteksi indikasi krisis. Mohon cari bantuan segera."
+        });
     }
 
     const messages = [
@@ -104,6 +123,44 @@ router.post('/', async (req, res) => {
         console.error("Error generating chat completion:", error.message);
         res.write(`event: error\ndata: {"error": "Internal Server Error"}\n\n`);
         res.end();
+    }
+});
+
+// Session Summary endpoint
+router.post('/summary', async (req, res) => {
+    const { sessionId } = req.body;
+    if (!sessionId) return res.status(400).json({ error: "Session ID required" });
+
+    try {
+        const session = await getChatById(sessionId);
+        if (!session || !session.messages) return res.status(404).json({ error: "Session not found" });
+
+        const messages = typeof session.messages === 'string' ? JSON.parse(session.messages) : session.messages;
+        const transcript = messages.map(m => `${m.role}: ${m.content}`).join('\n');
+
+        const prompt = [
+            { role: "system", content: "You are a psychologist. Summarize the following counseling session in 3-5 bullet points in Indonesian. Focus on the user's main concerns and emotional state." },
+            { role: "user", content: transcript }
+        ];
+
+        const response = await axios.post(`${INFERENCE_URL}/v1/chat/completions`, {
+            model: INFERENCE_MODEL_ID,
+            messages: prompt,
+            temperature: 0.5,
+            max_tokens: 500
+        }, {
+            headers: {
+                'Authorization': `Bearer ${INFERENCE_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const summary = response.data.choices[0]?.message?.content || "Tidak ada ringkasan.";
+        res.json({ summary });
+
+    } catch (err) {
+        console.error("Error generating summary:", err);
+        res.status(500).json({ error: "Summary generation failed" });
     }
 });
 

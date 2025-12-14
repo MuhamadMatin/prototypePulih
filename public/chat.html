@@ -9,14 +9,139 @@
     <title>Pulih - Antarmuka Chatbot</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="js/config.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link href="css/main.css" rel="stylesheet" />
+    <style>
+        .blur-mode-active #chat-stream {
+            filter: blur(6px);
+        }
+
+        .glass-modal {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .dark .glass-modal {
+            background: rgba(20, 20, 20, 0.9);
+        }
+    </style>
 </head>
 
 <body
     class="bg-background-light dark:bg-background-dark font-display text-text-main dark:text-white h-screen supports-[height:100dvh]:h-[100dvh] overflow-hidden selection:bg-primary selection:text-black touch-none">
+
+    <!-- Emergency Modal -->
+    <div id="emergency-modal"
+        class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div
+            class="bg-white dark:bg-surface-dark w-full max-w-md rounded-3xl p-6 shadow-2xl border-l-4 border-red-500 animate-[fadeIn_0.3s_ease-out]">
+            <div class="flex items-center gap-3 text-red-600 dark:text-red-400 mb-4">
+                <span class="material-symbols-outlined text-4xl">warning</span>
+                <h2 class="text-2xl font-bold">Kamu Tidak Sendirian</h2>
+            </div>
+            <p class="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                Kami mendengar rasa sakitmu. Saat ini sepertinya kamu sedang dalam kondisi krisis. Mohon izinkan kami
+                membantumu agar tetap aman.
+            </p>
+            <div class="space-y-3">
+                <a href="tel:119"
+                    class="flex items-center justify-center gap-2 w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-all">
+                    <span class="material-symbols-outlined">call</span>
+                    Hubungi Hotline (119)
+                </a>
+                <a href="https://intothelightid.org/cari-bantuan/" target="_blank"
+                    class="flex items-center justify-center gap-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all">
+                    <span class="material-symbols-outlined">public</span>
+                    Into The Light Indonesia
+                </a>
+                <button id="btn-curhat-emergency"
+                    class="w-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 text-gray-700 dark:text-gray-300 font-medium py-3 rounded-xl transition-all">
+                    Saya hanya ingin curhat
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mood Modal -->
+    <div id="mood-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+        <div class="glass-modal w-full max-w-lg rounded-3xl p-6 shadow-xl border border-white/20">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold">Bagaimana perasaannmu?</h3>
+                <button
+                    class="close-modal bg-gray-100 dark:bg-gray-800 p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-900/40"
+                    data-target="mood-modal">
+                    <span class="material-symbols-outlined pointer-events-none">close</span>
+                </button>
+            </div>
+            <div class="flex justify-center gap-4 text-4xl mb-6">
+                <button class="mood-emoji hover:scale-125 transition-transform" data-level="1">😭</button>
+                <button class="mood-emoji hover:scale-125 transition-transform" data-level="2">😢</button>
+                <button class="mood-emoji hover:scale-125 transition-transform" data-level="3">😐</button>
+                <button class="mood-emoji hover:scale-125 transition-transform" data-level="4">🙂</button>
+                <button class="mood-emoji hover:scale-125 transition-transform" data-level="5">😁</button>
+            </div>
+            <textarea id="mood-note" class="w-full bg-gray-50 dark:bg-black/20 rounded-xl p-3 mb-4 text-sm"
+                placeholder="Catatan singkat (opsional)..."></textarea>
+            <div class="bg-white/50 dark:bg-black/20 rounded-xl p-4">
+                <h4 class="text-sm font-semibold mb-2">Grafik 7 Hari Terakhir</h4>
+                <canvas id="mood-chart" height="150"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Journal Modal -->
+    <div id="journal-modal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+        <div
+            class="glass-modal w-full max-w-2xl rounded-3xl p-6 shadow-xl border border-white/20 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold">Jurnal Harian</h3>
+                <button class="close-modal bg-gray-100 dark:bg-gray-800 p-2 rounded-full hover:bg-red-100"
+                    data-target="journal-modal">
+                    <span class="material-symbols-outlined pointer-events-none">close</span>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <textarea id="journal-content"
+                    class="w-full h-40 bg-gray-50 dark:bg-black/20 rounded-xl p-4 resize-none focus:ring-2 focus:ring-primary"
+                    placeholder="Tuliskan apa yang ada di pikiranmu..."></textarea>
+                <button id="btn-save-journal"
+                    class="w-full bg-primary text-black font-bold py-3 rounded-xl hover:shadow-lg transition-all">
+                    Simpan & Analisis AI
+                </button>
+                <div id="journal-result" class="hidden animate-fade-in-up mt-4">
+                    <div
+                        class="bg-gradient-to-br from-purple-50 to-white dark:from-purple-900/20 dark:to-surface-dark border border-purple-100 dark:border-purple-800 rounded-2xl p-5 relative">
+                        <span
+                            class="material-symbols-outlined absolute right-4 top-4 text-purple-200 dark:text-purple-800 text-6xl opacity-20">psychology</span>
+                        <h4 class="text-purple-700 dark:text-purple-300 font-bold mb-2">Insight Psikologis</h4>
+                        <div id="journal-feedback" class="text-sm leading-relaxed prose dark:prose-invert"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Breathing Modal -->
+    <div id="breathing-modal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-green-900/80 backdrop-blur-md p-4">
+        <div class="flex flex-col items-center">
+            <div id="breathing-circle"
+                class="size-32 rounded-full bg-green-400 opacity-80 shadow-[0_0_100px_rgba(74,222,128,0.5)]"></div>
+            <h2 id="breathing-text" class="text-white text-2xl font-bold mt-12 animate-pulse">Siap?</h2>
+            <button id="btn-start-breathing"
+                class="mt-8 px-8 py-3 bg-white text-green-900 font-bold rounded-full hover:scale-105 transition-transform">
+                Mulai (4-7-8)
+            </button>
+            <button class="close-modal mt-12 text-white/50 hover:text-white flex items-center gap-2"
+                data-target="breathing-modal">
+                <span class="material-symbols-outlined">close</span> Keluar
+            </button>
+        </div>
+    </div>
+
     <div class="flex h-full w-full">
         <!-- Sidebar -->
         <div id="sidebar-overlay"
@@ -35,31 +160,53 @@
                         <div class="flex flex-col">
                             <h1
                                 class="text-xl md:text-2xl font-bold tracking-tight text-text-main dark:text-white font-display">
-                                Pulih
-                            </h1>
+                                Pulih</h1>
                         </div>
                     </div>
-                    <button id="close-sidebar-btn" class="md:hidden p-1 text-gray-500 hover:bg-gray-100 rounded-full">
-                        <span class="material-symbols-outlined">close</span>
-                    </button>
                 </div>
                 <!-- New Chat Button -->
                 <button id="btn-new-chat"
                     class="w-full group relative overflow-hidden flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white font-bold py-3 md:py-4 px-4 rounded-2xl shadow-lg shadow-green-200/50 dark:shadow-none transition-all duration-300 transform hover:-translate-y-0.5">
-                    <div
-                        class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    </div>
                     <span class="material-symbols-outlined font-medium relative z-10">add_comment</span>
                     <span class="relative z-10 text-sm md:text-base">Mulai Sesi Baru</span>
                 </button>
             </div>
+
+            <!-- Self Care Tools Menu -->
+            <div class="px-6 mb-4">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Self Care</h3>
+                <div class="grid grid-cols-3 gap-2">
+                    <button id="btn-mood"
+                        class="flex flex-col items-center justify-center p-3 rounded-xl bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 transition-colors gap-1 border border-orange-100 dark:border-orange-900/30">
+                        <span class="text-xl">😊</span>
+                        <span class="text-[10px] font-medium text-orange-700 dark:text-orange-300">Mood</span>
+                    </button>
+                    <button id="btn-journal"
+                        class="flex flex-col items-center justify-center p-3 rounded-xl bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 transition-colors gap-1 border border-purple-100 dark:border-purple-900/30">
+                        <span class="text-xl">📔</span>
+                        <span class="text-[10px] font-medium text-purple-700 dark:text-purple-300">Jurnal</span>
+                    </button>
+                    <button id="btn-breathing"
+                        class="flex flex-col items-center justify-center p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 transition-colors gap-1 border border-blue-100 dark:border-blue-900/30">
+                        <span class="text-xl">🌬️</span>
+                        <span class="text-[10px] font-medium text-blue-700 dark:text-blue-300">Napas</span>
+                    </button>
+                </div>
+                <!-- Daily Affirmation Tiny Card -->
+                <div
+                    class="mt-4 p-3 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-100 dark:border-green-800">
+                    <p id="affirmation-container" class="text-xs italic text-center text-text-main dark:text-gray-300">
+                        "Memuat kata bijak..."</p>
+                </div>
+            </div>
+
             <div class="px-6">
                 <div class="h-px bg-gradient-to-r from-transparent via-green-100 dark:via-green-800 to-transparent">
                 </div>
             </div>
+
             <!-- History List -->
             <div id="history-container" class="flex-1 overflow-y-auto px-4 py-4 space-y-8">
-                <!-- Dynamic history will be loaded here -->
                 <div class="flex flex-col gap-2">
                     <p class="text-center text-xs text-text-muted mt-4">Memuat riwayat...</p>
                 </div>
@@ -82,8 +229,7 @@
                     </div>
                     <div class="grid grid-cols-3 gap-2">
                         <button onclick="window.toggleTheme()"
-                            class="flex items-center justify-center gap-1 py-2 text-xs font-medium text-text-muted hover:bg-white dark:hover:bg-green-900 rounded-xl transition-colors"
-                            title="Ganti Tema">
+                            class="flex items-center justify-center gap-1 py-2 text-xs font-medium text-text-muted hover:bg-white dark:hover:bg-green-900 rounded-xl transition-colors">
                             <span class="material-symbols-outlined text-[16px]">contrast</span>
                         </button>
                         <button onclick="window.location.href='profile.html'"
@@ -115,6 +261,7 @@
             <!-- Header -->
             <header
                 class="flex-none relative flex items-center justify-between px-4 md:px-6 py-3 md:py-4 bg-white/80 dark:bg-surface-dark/80 backdrop-blur-md border-b border-green-100 dark:border-green-900/30 z-10 shadow-sm">
+                <!-- Header content with Blur and Export buttons -->
                 <div class="flex items-center gap-3 md:gap-4">
                     <div class="relative group cursor-pointer">
                         <div class="size-10 md:size-12 rounded-2xl bg-cover bg-center ring-2 ring-offset-2 ring-primary/30 dark:ring-offset-background-dark transition-all group-hover:ring-primary"
@@ -129,8 +276,6 @@
                         <h2
                             class="text-base md:text-lg font-bold text-text-main dark:text-white leading-tight font-display flex items-center gap-2">
                             Konselor Pulih
-                            <span class="material-symbols-outlined text-sm md:text-base text-primary fill-current"
-                                style="font-variation-settings: 'FILL' 1;">verified</span>
                         </h2>
                         <div class="flex items-center gap-1.5">
                             <span class="size-1.5 bg-primary rounded-full animate-pulse"></span>
@@ -139,8 +284,25 @@
                         </div>
                     </div>
                 </div>
-                <!-- Menu / Actions -->
-                <div class="flex items-center gap-2 relative">
+
+                <!-- Utilities on Header -->
+                <div class="flex items-center gap-2">
+                    <button id="btn-toggle-blur"
+                        class="p-2 rounded-xl text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
+                        title="Mode Privasi (Blur)">
+                        <span class="material-symbols-outlined">visibility_off</span>
+                    </button>
+                    <button id="btn-export-chat"
+                        class="hidden md:flex p-2 rounded-xl text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
+                        title="Simpan Chat">
+                        <span class="material-symbols-outlined">download</span>
+                    </button>
+                    <button id="btn-end-session"
+                        class="p-2 rounded-xl text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                        title="Akhiri Sesi">
+                        <span class="material-symbols-outlined">flag</span>
+                    </button>
+
                     <button id="mobile-menu-btn"
                         class="md:hidden p-2 rounded-full text-text-muted hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
                         <span class="material-symbols-outlined">more_vert</span>
@@ -150,31 +312,17 @@
                     <div id="mobile-menu-dropdown"
                         class="hidden absolute top-full right-0 mt-2 w-48 bg-white dark:bg-surface-dark border border-gray-100 dark:border-gray-800 rounded-2xl shadow-xl overflow-hidden z-50 origin-top-right transition-all transform scale-95 opacity-0">
                         <div class="p-1">
+                            <button id="mobile-export-chat"
+                                class="w-full text-left px-4 py-3 text-sm text-text-main dark:text-gray-200 hover:bg-green-50 dark:hover:bg-white/5 rounded-xl flex items-center gap-2">
+                                <span class="material-symbols-outlined text-[18px]">download</span> Expor Chat
+                            </button>
                             <button id="mobile-new-chat"
                                 class="w-full text-left px-4 py-3 text-sm text-text-main dark:text-gray-200 hover:bg-green-50 dark:hover:bg-white/5 rounded-xl flex items-center gap-2">
-                                <span class="material-symbols-outlined text-[18px]">add_comment</span>
-                                Sesi Baru
+                                <span class="material-symbols-outlined text-[18px]">add_comment</span> Sesi Baru
                             </button>
-                            <button id="mobile-history-btn"
-                                class="w-full text-left px-4 py-3 text-sm text-text-main dark:text-gray-200 hover:bg-green-50 dark:hover:bg-white/5 rounded-xl flex items-center gap-2">
-                                <span class="material-symbols-outlined text-[18px]">history</span>
-                                Riwayat Chat
-                            </button>
-                            <button onclick="window.location.href='profile.html'"
-                                class="w-full text-left px-4 py-3 text-sm text-text-main dark:text-gray-200 hover:bg-green-50 dark:hover:bg-white/5 rounded-xl flex items-center gap-2">
-                                <span class="material-symbols-outlined text-[18px]">person</span>
-                                Profil
-                            </button>
-                            <button onclick="window.toggleTheme()"
-                                class="w-full text-left px-4 py-3 text-sm text-text-main dark:text-gray-200 hover:bg-green-50 dark:hover:bg-white/5 rounded-xl flex items-center gap-2">
-                                <span class="material-symbols-outlined text-[18px]">contrast</span>
-                                Ganti Tema
-                            </button>
-                            <div class="h-px bg-gray-100 dark:bg-gray-800 my-1 mx-2"></div>
                             <button id="mobile-logout-btn"
                                 class="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl flex items-center gap-2">
-                                <span class="material-symbols-outlined text-[18px]">logout</span>
-                                Keluar
+                                <span class="material-symbols-outlined text-[18px]">logout</span> Keluar
                             </button>
                         </div>
                     </div>
@@ -182,7 +330,8 @@
             </header>
 
             <!-- Chat Stream -->
-            <div id="chat-stream" class="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 scroll-smooth z-0 relative">
+            <div id="chat-stream"
+                class="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 scroll-smooth z-0 relative transition-all duration-300">
                 <!-- Messages will appear here -->
                 <div class="flex justify-center my-4">
                     <div

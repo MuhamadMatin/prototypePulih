@@ -137,5 +137,97 @@ module.exports = {
     createChat,
     updateChat,
     getChatsByUserId,
-    getChatById
+    getChatById,
+    // Mood
+    createMoodLog,
+    getMoodHistory,
+    // Journal
+    createJournalEntry,
+    getJournalEntries,
+    // Streak
+    updateUserStreak
 };
+
+// Mood Operations
+async function createMoodLog(userId, moodLevel, note) {
+    const [result] = await pool.execute(
+        'INSERT INTO mood_logs (userId, moodLevel, note, createdAt) VALUES (?, ?, ?, ?)',
+        [userId, moodLevel, note || null, new Date()]
+    );
+    return result;
+}
+
+async function getMoodHistory(userId, days = 7) {
+    const [rows] = await pool.execute(
+        'SELECT * FROM mood_logs WHERE userId = ? AND createdAt >= DATE_SUB(NOW(), INTERVAL ? DAY) ORDER BY createdAt ASC',
+        [userId, days]
+    );
+    return rows;
+}
+
+// Journal Operations
+async function createJournalEntry(userId, content, aiFeedback) {
+    const [result] = await pool.execute(
+        'INSERT INTO journal_entries (userId, content, aiFeedback, createdAt) VALUES (?, ?, ?, ?)',
+        [userId, content, aiFeedback || null, new Date()]
+    );
+    return { id: result.insertId, userId, content, aiFeedback, createdAt: new Date() };
+}
+
+async function getJournalEntries(userId) {
+    const [rows] = await pool.execute(
+        'SELECT * FROM journal_entries WHERE userId = ? ORDER BY createdAt DESC',
+        [userId]
+    );
+    return rows;
+}
+
+// User Streak & Stats
+async function updateUserStreak(userId) {
+    // This is a simplified streak logic.
+    // In a real app, you'd check lastStreakUpdate vs Today.
+    // Here we just update the last login. Logic for calculation should be in the controller or here.
+    const now = new Date();
+    const [rows] = await pool.execute('SELECT streak, lastLogin, lastStreakUpdate FROM users WHERE id = ?', [userId]);
+    const user = rows[0];
+
+    if (!user) return;
+
+    let { streak, lastStreakUpdate } = user;
+    streak = streak || 0;
+
+    // Check if last update was yesterday to increment, or today to ignore, or older to reset.
+    // Simple logic:
+    // If lastStreakUpdate is today (same date), do nothing.
+    // If lastStreakUpdate is yesterday, increment.
+    // Else, reset to 1.
+
+    const today = new Date().toDateString();
+    const lastDate = lastStreakUpdate ? new Date(lastStreakUpdate).toDateString() : null;
+
+    let newStreak = streak;
+
+    if (lastDate !== today) {
+        if (lastDate) {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            if (yesterday.toDateString() === lastDate) {
+                newStreak = streak + 1;
+            } else {
+                newStreak = 1;
+            }
+        } else {
+            newStreak = 1;
+        }
+
+        await pool.execute(
+            'UPDATE users SET streak = ?, lastStreakUpdate = ?, lastLogin = ? WHERE id = ?',
+            [newStreak, now, now, userId]
+        );
+    } else {
+        // Just update lastLogin
+        await pool.execute('UPDATE users SET lastLogin = ? WHERE id = ?', [now, userId]);
+    }
+
+    return newStreak;
+}
