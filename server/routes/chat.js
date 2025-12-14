@@ -113,9 +113,9 @@ router.post('/', async (req, res) => {
     };
 
     try {
-        const response = await axios.post(`${INFERENCE_URL} /v1/chat / completions`, payload, {
+        const response = await axios.post(`${INFERENCE_URL}/v1/chat/completions`, payload, {
             headers: {
-                'Authorization': `Bearer ${INFERENCE_KEY} `,
+                'Authorization': `Bearer ${INFERENCE_KEY}`,
                 'Content-Type': 'application/json'
             },
             responseType: 'stream'
@@ -157,14 +157,14 @@ router.post('/summary', async (req, res) => {
             { role: "user", content: transcript }
         ];
 
-        const response = await axios.post(`${INFERENCE_URL} /v1/chat / completions`, {
+        const response = await axios.post(`${INFERENCE_URL}/v1/chat/completions`, {
             model: INFERENCE_MODEL_ID,
             messages: prompt,
             temperature: 0.5,
             max_tokens: 500
         }, {
             headers: {
-                'Authorization': `Bearer ${INFERENCE_KEY} `,
+                'Authorization': `Bearer ${INFERENCE_KEY}`,
                 'Content-Type': 'application/json'
             }
         });
@@ -200,9 +200,9 @@ router.post('/suggest', async (req, res) => {
     };
 
     try {
-        const response = await axios.post(`${INFERENCE_URL} /v1/chat / completions`, payload, {
+        const response = await axios.post(`${INFERENCE_URL}/v1/chat/completions`, payload, {
             headers: {
-                'Authorization': `Bearer ${INFERENCE_KEY} `,
+                'Authorization': `Bearer ${INFERENCE_KEY}`,
                 'Content-Type': 'application/json'
             }
         });
