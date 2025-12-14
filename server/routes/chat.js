@@ -58,6 +58,11 @@ router.post('/session', async (req, res) => {
 });
 
 // Crisis Detection
+const { NORMAL_SYSTEM_PROMPT, CRISIS_SYSTEM_PROMPT } = require('../utils/systemPrompt');
+
+// ... other routes ...
+
+// Crisis Detection
 const CRISIS_KEYWORDS = [
     "bunuh diri", "ingin mati", "akhiri hidup", "lukai diri", "tidak kuat lagi", "gantung diri", "minum racun", "lompat dari", "iris nadi", "potong nadi"
 ];
@@ -76,16 +81,12 @@ router.post('/', async (req, res) => {
         return res.status(400).json({ error: "Message is required" });
     }
 
-    // Crisis Check
-    if (checkCrisis(message)) {
-        return res.json({
-            isCrisis: true,
-            message: "Sistem mendeteksi indikasi krisis. Mohon cari bantuan segera."
-        });
-    }
+    // Determine System Prompt based on Crisis Detection
+    const isCrisis = checkCrisis(message);
+    const selectedSystemPrompt = isCrisis ? CRISIS_SYSTEM_PROMPT : NORMAL_SYSTEM_PROMPT;
 
     const messages = [
-        { role: "system", content: SYSTEM_PROMPT },
+        { role: "system", content: selectedSystemPrompt },
         ...(history || []),
         { role: "user", content: message }
     ];
@@ -93,7 +94,7 @@ router.post('/', async (req, res) => {
     const payload = {
         model: INFERENCE_MODEL_ID,
         messages: messages,
-        temperature: 0.7,
+        temperature: isCrisis ? 0.3 : 0.7, // Lower temperature for crisis to be more focused/grounded
         max_tokens: 4096,
         stream: true
     };

@@ -258,7 +258,7 @@ async function sendMessage() {
         const modal = document.getElementById('emergency-modal');
         modal.classList.remove('hidden');
         modal.classList.add('flex');
-        return;
+        // Do not return; allow the AI to respond as per new requirements
     }
 
     appendMessage(text, 'user');
@@ -289,21 +289,6 @@ async function sendMessage() {
 
             for (const line of lines) {
                 const trimmed = line.trim();
-                const jsonStart = trimmed.indexOf('{');
-
-                // Check if it's the crisis JSON from backend (fallback)
-                if (trimmed.startsWith('{') && trimmed.includes('"isCrisis":true')) {
-                    try {
-                        const json = JSON.parse(trimmed);
-                        if (json.isCrisis) {
-                            const modal = document.getElementById('emergency-modal');
-                            modal.classList.remove('hidden');
-                            modal.classList.add('flex');
-                            contentDiv.innerHTML = "Maaf, saya tidak dapat melanjutkan percakapan ini karena alasan keamanan.";
-                            return;
-                        }
-                    } catch (e) { }
-                }
 
                 if (trimmed.startsWith('data:')) {
                     const dataStr = trimmed.replace('data:', '').trim();
