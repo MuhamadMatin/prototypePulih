@@ -272,7 +272,7 @@ async function sendMessage() {
     let fullReply = "";
 
     try {
-        const response = await initiateChatStream(text, messageHistory, currentUser.isAnonymous ? null : currentUser.id, currentSessionId);
+        const response = await initiateChatStream(text, messageHistory, currentUser.id, currentSessionId);
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder("utf-8");
@@ -390,7 +390,7 @@ async function initiateAutoChat(prompt) {
     const contentDiv = botMsgDiv.querySelector('.markdown-content');
 
     try {
-        const response = await initiateChatStream(prompt, messageHistory, currentUser.isAnonymous ? null : currentUser.id, currentSessionId);
+        const response = await initiateChatStream(prompt, messageHistory, currentUser.id, currentSessionId);
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder("utf-8");

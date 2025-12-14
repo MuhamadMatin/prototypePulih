@@ -86,13 +86,16 @@ router.post('/', async (req, res) => {
         try {
             const contextData = await getDataContext(userId);
             if (contextData) {
-                const { mood, journal } = contextData;
-                contextStr += "\n\n[CONTEXT DATA (Use this to personalize response)]\n";
+                const { mood, journals } = contextData;
+                contextStr += "\n\n[CONTEXT DATA - USE THIS TO PERSONALIZE RESPONSE]\n";
                 if (mood) {
-                    contextStr += `- Latest Mood(${new Date(mood.createdAt).toLocaleDateString()}): Level ${mood.moodLevel}/5. Note: "${mood.note || ''}"\n`;
+                    contextStr += `- Latest Mood (${new Date(mood.createdAt).toLocaleDateString()}): Level ${mood.moodLevel}/5. Note: "${mood.note || ''}"\n`;
                 }
-                if (journal) {
-                    contextStr += `- Latest Journal (${new Date(journal.createdAt).toLocaleDateString()}): "${journal.content.substring(0, 300)}..."\n`;
+                if (journals && journals.length > 0) {
+                    contextStr += `- Recent Journal Entries:\n`;
+                    journals.forEach((j, i) => {
+                        contextStr += `  ${i + 1}. [${new Date(j.createdAt).toLocaleDateString()}] "${j.content.substring(0, 300)}..." (Insight: ${j.aiFeedback ? j.aiFeedback.substring(0, 100) : 'None'})\n`;
+                    });
                 }
             }
         } catch (err) { console.error("Error fetching context:", err); }

@@ -9,9 +9,9 @@ export const loginFormHTML = `
         </div>
         <form class="space-y-5" id="login-form">
             <div class="space-y-1.5">
-                <label class="block text-text-main dark:text-gray-200 text-xs font-bold uppercase tracking-wider ml-1 opacity-70">Email</label>
+                <label class="block text-text-main dark:text-gray-200 text-xs font-bold uppercase tracking-wider ml-1 opacity-70">Email atau Username</label>
                 <div class="relative group">
-                    <input id="email" class="form-input w-full rounded-2xl border-transparent bg-white/50 dark:bg-black/20 focus:bg-white dark:focus:bg-black/40 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 h-12 px-4 pl-11 placeholder:text-gray-400 dark:placeholder:text-gray-500 text-base shadow-sm transition-all duration-300" placeholder="nama@email.com" type="email" required/>
+                    <input id="email" class="form-input w-full rounded-2xl border-transparent bg-white/50 dark:bg-black/20 focus:bg-white dark:focus:bg-black/40 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 h-12 px-4 pl-11 placeholder:text-gray-400 dark:placeholder:text-gray-500 text-base shadow-sm transition-all duration-300" placeholder="Email atau Username" type="text" required/>
                     <div class="absolute left-4 top-3 text-gray-400 group-focus-within:text-primary transition-colors">
                         <span class="material-symbols-outlined text-[20px]">mail</span>
                     </div>
@@ -79,6 +79,15 @@ export const signupFormHTML = `
                     <input id="signup-name" class="form-input w-full rounded-2xl border-transparent bg-white/50 dark:bg-black/20 focus:bg-white dark:focus:bg-black/40 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 h-12 px-4 pl-11 placeholder:text-gray-400 dark:placeholder:text-gray-500 text-base shadow-sm transition-all duration-300" placeholder="Nama Anda" type="text" required/>
                     <div class="absolute left-4 top-3 text-gray-400 group-focus-within:text-primary transition-colors">
                         <span class="material-symbols-outlined text-[20px]">person</span>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-1.5">
+                <label class="block text-text-main dark:text-gray-200 text-xs font-bold uppercase tracking-wider ml-1 opacity-70">Username</label>
+                <div class="relative group">
+                    <input id="signup-username" class="form-input w-full rounded-2xl border-transparent bg-white/50 dark:bg-black/20 focus:bg-white dark:focus:bg-black/40 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 h-12 px-4 pl-11 placeholder:text-gray-400 dark:placeholder:text-gray-500 text-base shadow-sm transition-all duration-300" placeholder="UsernameUnik" type="text" required/>
+                    <div class="absolute left-4 top-3 text-gray-400 group-focus-within:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">alternate_email</span>
                     </div>
                 </div>
             </div>

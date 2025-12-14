@@ -1,9 +1,10 @@
 CREATE TABLE IF NOT EXISTS users (
     id VARCHAR(255) PRIMARY KEY,
+    username VARCHAR(50) UNIQUE, 
     fullName VARCHAR(255) NOT NULL,
     nickname VARCHAR(255),
     email VARCHAR(255) UNIQUE,
-    password VARCHAR(255),
+    password VARCHAR(255) NOT NULL, -- Password is now required even for anonymous
     phone VARCHAR(50),
     bio TEXT,
     isAnonymous BOOLEAN DEFAULT FALSE,

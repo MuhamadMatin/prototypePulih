@@ -15,6 +15,9 @@ router.post('/', async (req, res) => {
         res.status(201).json({ message: "Mood saved" });
     } catch (err) {
         console.error("Error saving mood:", err);
+        if (err.code === 'ER_NO_REFERENCED_ROW_2' || err.errno === 1452) {
+            return res.status(401).json({ error: "User mismatch. Please login again." });
+        }
         res.status(500).json({ error: "Database error" });
     }
 });

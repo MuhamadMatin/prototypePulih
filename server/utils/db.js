@@ -34,16 +34,23 @@ async function initDB() {
 
 // User Operations
 async function createUser(user) {
-    const { id, fullName, email, password, nickname, joinedDate } = user;
+    const { id, username, fullName, email, password, nickname, joinedDate } = user;
     const [result] = await pool.execute(
-        'INSERT INTO users (id, fullName, email, password, nickname, joinedDate, isAnonymous) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [id, fullName, email || null, password || null, nickname || null, joinedDate, user.isAnonymous ? 1 : 0]
+        'INSERT INTO users (id, username, fullName, email, password, nickname, joinedDate, isAnonymous) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [id, username || null, fullName, email || null, password, nickname || null, joinedDate, user.isAnonymous ? 1 : 0]
     );
     return result;
 }
 
 async function findUserByEmail(email) {
+    if (!email) return null;
     const [rows] = await pool.execute('SELECT * FROM users WHERE email = ?', [email]);
+    return rows[0];
+}
+
+async function findUserByUsername(username) {
+    if (!username) return null;
+    const [rows] = await pool.execute('SELECT * FROM users WHERE username = ?', [username]);
     return rows[0];
 }
 
@@ -137,15 +144,14 @@ async function getDataContext(userId) {
         [userId]
     );
 
-    // Get latest journal
+    // Get latest journal (up to 3 for context)
     const [journals] = await pool.execute(
-        'SELECT * FROM journal_entries WHERE userId = ? ORDER BY createdAt DESC LIMIT 1',
+        'SELECT * FROM journal_entries WHERE userId = ? ORDER BY createdAt DESC LIMIT 3',
         [userId]
     );
-
     return {
         mood: moods[0] || null,
-        journal: journals[0] || null
+        journals: journals || []
     };
 }
 
@@ -154,6 +160,7 @@ module.exports = {
     initDB,
     createUser,
     findUserByEmail,
+    findUserByUsername,
     findUserById,
     updateUser,
     createChat,
@@ -163,6 +170,7 @@ module.exports = {
     createMoodLog,
     getMoodHistory,
     createJournalEntry,
+    updateJournalEntry,
     getJournalEntries,
     updateUserStreak,
     getDataContext // Exported
@@ -192,6 +200,14 @@ async function createJournalEntry(userId, content, aiFeedback) {
         [userId, content, aiFeedback || null, new Date()]
     );
     return { id: result.insertId, userId, content, aiFeedback, createdAt: new Date() };
+}
+
+async function updateJournalEntry(id, content, aiFeedback) {
+    await pool.execute(
+        'UPDATE journal_entries SET content = ?, aiFeedback = ? WHERE id = ?',
+        [content, aiFeedback || null, id]
+    );
+    return { id, content, aiFeedback };
 }
 
 async function getJournalEntries(userId) {
