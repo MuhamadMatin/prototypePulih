@@ -127,9 +127,6 @@ async function getChatById(id) {
     return rows[0];
 }
 
-return newStreak;
-}
-
 // Context for Chat
 async function getDataContext(userId) {
     if (!userId) return null;
