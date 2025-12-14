@@ -50,6 +50,33 @@
 - **Smart Suggestions**: Tombol saran cepat saat tidak tahu harus mulai dari mana.
 - **Riwayat Chat**: Simpan dan akses kembali sesi percakapan sebelumnya.
 
+### 🎤 Voice-to-Text
+- **Speech Recognition**: Fitur input suara menggunakan Web Speech API native.
+- **Bahasa Indonesia**: Dioptimalkan untuk pengenalan bahasa Indonesia (id-ID).
+- **Toggle Recording**: Klik tombol mic untuk mulai/stop merekam.
+- **Visual Feedback**: Animasi heartbeat saat merekam aktif.
+
+## 📊 Application Flowchart
+
+Berikut adalah alur kerja utama aplikasi Pulih:
+
+![Pulih Application Flowchart](docs/flowchart.png)
+
+**Penjelasan Alur:**
+1. **User** membuka aplikasi dan masuk ke **Landing Page**
+2. **Authentication** - Login/Register atau Mode Anonim
+3. **Chat Interface** - Antarmuka utama untuk berkomunikasi dengan AI
+4. **Select Feature** - Pilih fitur yang tersedia:
+   - 📊 **Mood Tracker** → Log mood → Simpan ke database
+   - 📓 **Journal** → Tulis catatan → Simpan entry
+   - 🧘 **Breathing** → Latihan napas terpandu
+   - 👤 **Profile** → Kelola akun
+5. **AI Context** - Data mood dan jurnal digunakan untuk personalisasi respons
+6. **AI Counselor** - Memproses pesan dan menentukan jenis respons
+7. **Crisis Detection** - Deteksi kondisi krisis:
+   - **Normal** → Respons empatik biasa
+   - **Crisis** → Respons krisis + akses hotline 119
+
 ## 🛠️ Teknologi yang Digunakan
 
 | Kategori | Teknologi |
