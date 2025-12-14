@@ -67,7 +67,10 @@ function setupMoodTracker() {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ userId, moodLevel: level, note })
                 });
-                alert('Mood tercatat!');
+                // alert('Mood tercatat!'); // Removed
+                toggleModal('mood-modal', false); // Auto-close modal
+                showToast('Mood berhasil dicatat', 'success');
+
                 loadMoodHistory(); // Refresh chart
 
                 // Dispatch Event to Chat
@@ -75,9 +78,37 @@ function setupMoodTracker() {
                     detail: { level: level, note: note }
                 }));
 
-            } catch (e) { alert('Gagal menyimpan mood'); }
+            } catch (e) {
+                showToast('Gagal menyimpan mood', 'error');
+            }
         });
     });
+}
+
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `fixed top-4 left-1/2 transform -translate-x-1/2 z-[70] px-6 py-3 rounded-2xl shadow-xl flex items-center gap-3 animate-[slideDown_0.3s_ease-out] border ${type === 'success'
+            ? 'bg-white dark:bg-green-900/90 text-green-800 dark:text-green-100 border-green-100 dark:border-green-800'
+            : 'bg-white dark:bg-red-900/90 text-red-800 dark:text-red-100 border-red-100 dark:border-red-800'
+        }`;
+
+    // Add icon based on type
+    const icon = type === 'success' ? 'check_circle' : 'error';
+
+    toast.innerHTML = `
+        <span class="material-symbols-outlined text-[20px]">${icon}</span>
+        <span class="text-sm font-semibold">${message}</span>
+    `;
+
+    document.body.appendChild(toast);
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translate(-50%, -20px)';
+        toast.style.transition = 'all 0.3s ease-in';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
 
 async function loadMoodHistory() {
