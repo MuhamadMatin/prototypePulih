@@ -365,7 +365,7 @@ window.addEventListener('moodUpdated', (e) => {
     document.getElementById('mood-modal')?.classList.remove('flex');
 
     // Trigger AI response (Simulate User context update)
-    const prompt = `[SYSTEM UPDATE: User recorded Mood Level ${level}/5. Note: "${note}". Respond immediately and supportively to this emotional change.]`;
+    const prompt = `[SYSTEM UPDATE: User recorded Mood Level ${level}/5 (Scale: 1 = Sangat Sedih/Buruk, 5 = Sangat Senang/Baik). Note: "${note}". Respond accordingly.]`;
 
     // UI: Show small indicator
     const historyContainer = document.getElementById('history-container');
