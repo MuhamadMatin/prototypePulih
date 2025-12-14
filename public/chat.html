@@ -92,35 +92,144 @@
         </div>
     </div>
 
-    <!-- Journal Modal -->
+    <!-- Journal Modal (New Dashboard Design) -->
     <div id="journal-modal"
-        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-[fadeIn_0.2s_ease-out]">
+        <!-- Main Card Container -->
         <div
-            class="glass-modal w-full max-w-2xl rounded-3xl p-6 shadow-xl border border-white/20 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold">Jurnal Harian</h3>
-                <button class="close-modal bg-gray-100 dark:bg-gray-800 p-2 rounded-full hover:bg-red-100"
-                    data-target="journal-modal">
-                    <span class="material-symbols-outlined pointer-events-none">close</span>
+            class="relative w-full max-w-5xl bg-white dark:bg-surface-dark rounded-3xl shadow-2xl border border-white/50 dark:border-green-900/30 overflow-hidden flex flex-col md:flex-row h-[85vh] md:h-[600px] animate-[slideUp_0.3s_ease-out]">
+
+            <!-- Close Button (Absolute) -->
+            <button
+                class="absolute top-4 right-4 z-50 p-2 rounded-full bg-white/50 dark:bg-black/20 hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-400 hover:text-red-500 transition-all close-modal"
+                data-target="journal-modal">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+
+            <!-- Sidebar (Left Panel) -->
+            <div
+                class="w-full md:w-1/3 bg-green-50/50 dark:bg-green-900/10 p-6 md:p-8 flex flex-col border-b md:border-b-0 md:border-r border-green-100 dark:border-green-800/30 relative">
+                <!-- Header -->
+                <div class="mb-8">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary text-3xl md:text-4xl">menu_book</span>
+                        Jurnal Saya
+                    </h2>
+                    <p class="text-sm text-gray-500 dark:text-green-200/60 mt-2 font-medium">
+                        Ruang aman untuk mencatat perasaan dan perjalanan pemulihanmu.
+                    </p>
+                </div>
+
+                <!-- Weekly Mood Summary Card -->
+                <div
+                    class="bg-white dark:bg-surface-dark rounded-2xl p-5 shadow-sm border border-green-100 dark:border-green-800/50 mb-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <span
+                            class="text-[10px] md:text-xs font-bold text-gray-400 dark:text-green-400 uppercase tracking-wider">Mood
+                            Minggu Ini</span>
+                        <span id="weekly-mood-icon"
+                            class="material-symbols-outlined text-yellow-400 text-base">sentiment_satisfied</span>
+                    </div>
+                    <!-- Dynamic Bars -->
+                    <div class="flex gap-1.5 h-2.5 mt-1" id="weekly-mood-bars">
+                        <div class="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full"></div>
+                        <div class="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full"></div>
+                        <div class="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full"></div>
+                        <div class="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full"></div>
+                        <div class="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full"></div>
+                        <div class="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full"></div>
+                        <div class="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full"></div>
+                    </div>
+                    <p id="weekly-mood-text" class="text-xs text-gray-500 dark:text-gray-400 mt-3 leading-relaxed">Belum
+                        ada data mood minggu ini. Mulai catat hari ini!</p>
+                </div>
+
+                <!-- CTA Button -->
+                <button id="btn-write-journal"
+                    class="mt-auto w-full bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-green-400/20 hover:shadow-green-400/30 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 group">
+                    <span class="material-symbols-outlined group-hover:rotate-90 transition-transform">add</span>
+                    Tulis Jurnal Baru
                 </button>
             </div>
-            <div class="space-y-4">
-                <textarea id="journal-content"
-                    class="w-full h-40 bg-gray-50 dark:bg-black/20 rounded-xl p-4 resize-none focus:ring-2 focus:ring-primary"
-                    placeholder="Tuliskan apa yang ada di pikiranmu..."></textarea>
-                <button id="btn-save-journal"
-                    class="w-full bg-primary text-black font-bold py-3 rounded-xl hover:shadow-lg transition-all">
-                    Simpan & Analisis AI
-                </button>
-                <div id="journal-result" class="hidden animate-fade-in-up mt-4">
+
+            <!-- Content Area (Right Panel) -->
+            <div class="w-full md:w-2/3 p-6 md:p-8 flex flex-col h-full bg-white dark:bg-surface-dark relative">
+
+                <!-- VIEW 1: Journal List -->
+                <div id="journal-list-view" class="flex flex-col h-full">
+                    <!-- Toolbar -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                        <div class="relative w-full sm:w-64 group">
+                            <span
+                                class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 group-focus-within:text-primary transition-colors">
+                                <span class="material-symbols-outlined text-xl">search</span>
+                            </span>
+                            <input id="journal-search" type="text"
+                                class="w-full py-2.5 pl-10 pr-4 text-sm bg-gray-50 dark:bg-black/20 border-transparent focus:border-primary/50 focus:ring-0 rounded-xl text-gray-700 dark:text-gray-200 placeholder-gray-400 transition-all"
+                                placeholder="Cari catatan...">
+                        </div>
+                        <div class="flex gap-1" id="journal-filters">
+                            <!-- Filter buttons can be added here -->
+                        </div>
+                    </div>
+
+                    <!-- Scrollable List -->
+                    <div id="journal-entries-container"
+                        class="flex-1 overflow-y-auto space-y-4 pr-2 scroll-smooth hover:scroll-auto">
+                        <!-- Loading State -->
+                        <div class="flex flex-col items-center justify-center h-40 text-gray-400">
+                            <span class="material-symbols-outlined text-4xl mb-2 animate-spin">progress_activity</span>
+                            <p class="text-xs">Memuat jurnal...</p>
+                        </div>
+                    </div>
+
+                    <!-- Pagination (Static for now, can be dynamic later) -->
                     <div
-                        class="bg-gradient-to-br from-purple-50 to-white dark:from-purple-900/20 dark:to-surface-dark border border-purple-100 dark:border-purple-800 rounded-2xl p-5 relative">
-                        <span
-                            class="material-symbols-outlined absolute right-4 top-4 text-purple-200 dark:text-purple-800 text-6xl opacity-20">psychology</span>
-                        <h4 class="text-purple-700 dark:text-purple-300 font-bold mb-2">Insight Psikologis</h4>
-                        <div id="journal-feedback" class="text-sm leading-relaxed prose dark:prose-invert"></div>
+                        class="mt-4 pt-4 border-t border-gray-100 dark:border-green-900/20 flex justify-between items-center text-xs text-gray-400">
+                        <span id="journal-count">Menampilkan 0 entri</span>
                     </div>
                 </div>
+
+                <!-- VIEW 2: Write/Edit Form (Hidden by default) -->
+                <div id="journal-write-view" class="hidden flex-col h-full animate-[fadeIn_0.2s_ease-out]">
+                    <div class="flex items-center gap-2 mb-4">
+                        <button id="btn-back-journal"
+                            class="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 text-gray-500 transition-colors">
+                            <span class="material-symbols-outlined">arrow_back</span>
+                        </button>
+                        <h3 class="text-lg font-bold text-gray-800 dark:text-white">Entri Baru</h3>
+                    </div>
+
+                    <div class="flex-1 flex flex-col gap-4">
+                        <textarea id="journal-content-new"
+                            class="flex-1 w-full bg-gray-50 dark:bg-black/20 border-0 rounded-2xl p-5 text-text-main dark:text-gray-200 focus:ring-2 focus:ring-primary/50 resize-none leading-relaxed placeholder-gray-400"
+                            placeholder="Apa yang ada di pikiranmu hari ini? Cobalah mulai dengan 'Hari ini aku merasa...'"></textarea>
+
+                        <!-- AI Feedback Preview (Hidden initially) -->
+                        <div id="journal-feedback-preview"
+                            class="hidden bg-purple-50 dark:bg-purple-900/10 p-4 rounded-2xl border border-purple-100 dark:border-purple-800/30">
+                            <h4
+                                class="text-xs font-bold text-purple-600 dark:text-purple-300 mb-2 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">psychology</span>
+                                Insight Sementara
+                            </h4>
+                            <div id="journal-feedback-content"
+                                class="text-sm text-gray-600 dark:text-gray-300 prose prose-sm dark:prose-invert"></div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 flex justify-end gap-3">
+                        <button id="btn-cancel-journal"
+                            class="px-6 py-2.5 rounded-xl text-sm font-bold text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+                            Batal
+                        </button>
+                        <button id="btn-save-journal-new"
+                            class="px-8 py-2.5 rounded-xl text-sm font-bold text-black bg-primary hover:bg-primary-dark shadow-lg shadow-primary/20 transition-all transform hover:-translate-y-0.5">
+                            Simpan
+                        </button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
