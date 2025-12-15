@@ -1,0 +1,294 @@
+const express = require('express');
+const router = express.Router();
+const axios = require('axios');
+const { createChat, updateChat, getChatsByUserId, getChatById, getDataContext } = require('../utils/db');
+const { NORMAL_SYSTEM_PROMPT, CRISIS_SYSTEM_PROMPT } = require('../utils/systemPrompt');
+
+require('dotenv').config();
+
+// Config from env
+const INFERENCE_URL = process.env.INFERENCE_URL;
+const INFERENCE_KEY = process.env.INFERENCE_KEY;
+const INFERENCE_MODEL_ID = process.env.INFERENCE_MODEL_ID;
+
+// Chat History: Get
+router.get('/history', async (req, res) => {
+    const userId = req.query.userId;
+    if (!userId) return res.status(400).json({ error: "User ID required" });
+
+    try {
+        const userChats = await getChatsByUserId(userId);
+        res.json(userChats);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Database error" });
+    }
+});
+
+// Chat History: Save Session (Create or Update)
+router.post('/session', async (req, res) => {
+    const { userId, sessionId, title, messages } = req.body;
+    if (!userId) return res.status(400).json({ error: "User ID required" });
+
+    try {
+        // IMPORTANT: Check if user exists in database before creating chat
+        // This prevents foreign key constraint errors
+        const { findUserById, createUser } = require('../utils/db');
+        let user = await findUserById(userId);
+
+        // If user doesn't exist, create a placeholder user
+        // This handles cases where localStorage has a user that's not in the DB
+        if (!user) {
+            console.log(`User ${userId} not found in DB, creating placeholder...`);
+            try {
+                await createUser({
+                    id: userId,
+                    username: null,
+                    fullName: 'User',
+                    email: null,
+                    password: 'auto-generated',
+                    nickname: null,
+                    joinedDate: new Date(),
+                    isAnonymous: true
+                });
+                console.log(`Placeholder user ${userId} created successfully`);
+            } catch (createErr) {
+                // If user creation fails (e.g., duplicate), try to find again
+                console.warn('Failed to create placeholder user:', createErr.message);
+                user = await findUserById(userId);
+                if (!user) {
+                    // If still not found, return error
+                    return res.status(400).json({ error: "Unable to verify user. Please re-login." });
+                }
+            }
+        }
+
+        let session;
+        if (sessionId) {
+            session = await getChatById(sessionId);
+        }
+
+        if (!session) {
+            session = {
+                id: sessionId || Date.now().toString(), // Ideally use UUID, but keeping logic consistent
+                userId,
+                title: title || "Sesi Baru",
+                createdAt: new Date(),
+                messages: messages || []
+            };
+            await createChat(session);
+        } else {
+            await updateChat(sessionId, { title, messages });
+            session = await getChatById(sessionId); // Fetch updated
+        }
+
+        res.json(session);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Database error" });
+    }
+});
+
+// Crisis Detection
+const CRISIS_KEYWORDS = [
+    "bunuh diri", "ingin mati", "akhiri hidup", "lukai diri", "tidak kuat lagi", "gantung diri", "minum racun", "lompat dari", "iris nadi", "potong nadi"
+];
+
+function checkCrisis(text) {
+    if (!text) return false;
+    const lower = text.toLowerCase();
+    return CRISIS_KEYWORDS.some(k => lower.includes(k));
+}
+
+// Chat Completion
+router.post('/', async (req, res) => {
+    const { message, history, userId, sessionId } = req.body;
+
+    if (!message) {
+        return res.status(400).json({ error: "Message is required" });
+    }
+
+    // Determine System Prompt based on Crisis Detection
+    const isCrisis = checkCrisis(message);
+    const selectedSystemPrompt = isCrisis ? CRISIS_SYSTEM_PROMPT : NORMAL_SYSTEM_PROMPT;
+
+    // Fetch Context (Mood/Journal/Assessment) if userId is present
+    let contextStr = "";
+    if (userId) {
+        try {
+            const contextData = await getDataContext(userId);
+            if (contextData) {
+                const { mood, journals, assessments } = contextData;
+                contextStr += "\n\n[CONTEXT DATA - USE THIS TO PERSONALIZE RESPONSE]\n";
+
+                // Mood context
+                if (mood) {
+                    contextStr += `- Latest Mood (${new Date(mood.createdAt).toLocaleDateString()}): Level ${mood.moodLevel}/5. Note: "${mood.note || ''}"\n`;
+                }
+
+                // Assessment context (CRITICAL for personalization)
+                if (assessments) {
+                    if (assessments.phq9) {
+                        const phq = assessments.phq9;
+                        const severityLabels = { minimal: 'Minimal', mild: 'Ringan', moderate: 'Sedang', moderately_severe: 'Cukup Berat', severe: 'Berat' };
+                        contextStr += `- PHQ-9 Depression Assessment (${new Date(phq.createdAt).toLocaleDateString()}): Score ${phq.score}/27 - ${severityLabels[phq.severity] || phq.severity}. `;
+                        if (phq.score >= 15) {
+                            contextStr += "PENTING: User menunjukkan gejala depresi yang signifikan. Tunjukkan empati ekstra dan pertimbangkan untuk dengan lembut menyarankan bantuan profesional jika relevan.\n";
+                        } else {
+                            contextStr += "\n";
+                        }
+                    }
+                    if (assessments.gad7) {
+                        const gad = assessments.gad7;
+                        const severityLabels = { minimal: 'Minimal', mild: 'Ringan', moderate: 'Sedang', severe: 'Berat' };
+                        contextStr += `- GAD-7 Anxiety Assessment (${new Date(gad.createdAt).toLocaleDateString()}): Score ${gad.score}/21 - ${severityLabels[gad.severity] || gad.severity}. `;
+                        if (gad.score >= 10) {
+                            contextStr += "PENTING: User menunjukkan tingkat kecemasan yang tinggi. Pertimbangkan untuk menawarkan teknik grounding atau breathing jika relevan.\n";
+                        } else {
+                            contextStr += "\n";
+                        }
+                    }
+                }
+
+                // Journal context
+                if (journals && journals.length > 0) {
+                    contextStr += `- Recent Journal Entries:\n`;
+                    journals.forEach((j, i) => {
+                        contextStr += `  ${i + 1}. [${new Date(j.createdAt).toLocaleDateString()}] "${j.content.substring(0, 300)}..." (Insight: ${j.aiFeedback ? j.aiFeedback.substring(0, 100) : 'None'})\n`;
+                    });
+                }
+            }
+        } catch (err) { console.error("Error fetching context:", err); }
+    }
+
+    const messages = [
+        { role: "system", content: selectedSystemPrompt + contextStr },
+        ...(history || []),
+        { role: "user", content: message }
+    ];
+
+    const payload = {
+        model: INFERENCE_MODEL_ID,
+        messages: messages,
+        temperature: isCrisis ? 0.3 : 0.7, // Lower temperature for crisis to be more focused/grounded
+        max_tokens: 4096,
+        stream: true
+    };
+
+    try {
+        const response = await axios.post(`${INFERENCE_URL}/v1/chat/completions`, payload, {
+            headers: {
+                'Authorization': `Bearer ${INFERENCE_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            responseType: 'stream'
+        });
+
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+
+        response.data.on('data', chunk => {
+            res.write(chunk);
+        });
+
+        response.data.on('end', () => {
+            res.end();
+        });
+
+    } catch (error) {
+        console.error("Error generating chat completion:", error.message);
+        res.write(`event: error\ndata: { "error": "Internal Server Error" } \n\n`);
+        res.end();
+    }
+});
+
+// Session Summary endpoint
+router.post('/summary', async (req, res) => {
+    const { sessionId } = req.body;
+    if (!sessionId) return res.status(400).json({ error: "Session ID required" });
+
+    try {
+        const session = await getChatById(sessionId);
+        if (!session || !session.messages) return res.status(404).json({ error: "Session not found" });
+
+        const messages = typeof session.messages === 'string' ? JSON.parse(session.messages) : session.messages;
+        const transcript = messages.map(m => `${m.role}: ${m.content} `).join('\n');
+
+        const prompt = [
+            { role: "system", content: "You are a psychologist. Summarize the following counseling session in 3-5 bullet points in Indonesian. Focus on the user's main concerns and emotional state." },
+            { role: "user", content: transcript }
+        ];
+
+        const response = await axios.post(`${INFERENCE_URL}/v1/chat/completions`, {
+            model: INFERENCE_MODEL_ID,
+            messages: prompt,
+            temperature: 0.5,
+            max_tokens: 500
+        }, {
+            headers: {
+                'Authorization': `Bearer ${INFERENCE_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const summary = response.data.choices[0]?.message?.content || "Tidak ada ringkasan.";
+        res.json({ summary });
+
+    } catch (err) {
+        console.error("Error generating summary:", err);
+        res.status(500).json({ error: "Summary generation failed" });
+    }
+});
+
+// Chat Suggestion
+router.post('/suggest', async (req, res) => {
+    const { history } = req.body;
+
+    const historyText = (history || [])
+        .slice(-4)
+        .map(m => `${m.role === 'user' ? 'User' : 'Counselor'}: ${m.content} `)
+        .join('\n');
+
+    const suggestionMessages = [
+        { role: "system", content: "You are an assistant generating 3 possible responses for a User (counseling client) to say to their AI Counselor. The suggestions must be in the first person ('Aku'/'Saya'). They should be natural responses to the Counselor's last message, such as answering a question, expressing a feeling, or asking for specific advice. Do NOT generate questions that a counselor would ask (like 'Sudah berapa lama?'). Output ONLY a raw JSON array of strings. Example: [\"Aku merasa sedih.\", \"Apa yang harus aku lakukan?\", \"Aku tidak yakin.\"]." },
+        { role: "user", content: `Here is the recent conversation context: \n\n${historyText} \n\nBased on this interaction, suggest 3 relevant responses for the USER to say next in Indonesian.` }
+    ];
+
+    const payload = {
+        model: INFERENCE_MODEL_ID,
+        messages: suggestionMessages,
+        temperature: 0.7,
+        max_tokens: 256
+    };
+
+    try {
+        const response = await axios.post(`${INFERENCE_URL}/v1/chat/completions`, payload, {
+            headers: {
+                'Authorization': `Bearer ${INFERENCE_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        let content = response.data.choices[0]?.message?.content || "[]";
+
+        try {
+            const firstBracket = content.indexOf('[');
+            const lastBracket = content.lastIndexOf(']');
+            if (firstBracket !== -1 && lastBracket !== -1) {
+                content = content.substring(firstBracket, lastBracket + 1);
+            }
+            const suggestions = JSON.parse(content);
+            res.json({ suggestions });
+        } catch (e) {
+            console.error("Failed to parse suggestions JSON");
+            res.json({ suggestions: [] });
+        }
+
+    } catch (error) {
+        console.error("Error generating suggestions:", error.message);
+        res.json({ suggestions: [] });
+    }
+});
+
+module.exports = router;

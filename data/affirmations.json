@@ -1,0 +1,283 @@
+{
+    "affirmations": [
+        {
+            "id": 1,
+            "text": "Kamu layak mendapat cinta dan kebahagiaan, termasuk dari dirimu sendiri.",
+            "category": "self-love"
+        },
+        {
+            "id": 2,
+            "text": "Setiap langkah kecil yang kamu ambil hari ini adalah kemajuan.",
+            "category": "progress"
+        },
+        {
+            "id": 3,
+            "text": "Perasaanmu valid. Tidak apa-apa untuk merasa seperti ini.",
+            "category": "validation"
+        },
+        {
+            "id": 4,
+            "text": "Kamu lebih kuat dari yang kamu kira.",
+            "category": "strength"
+        },
+        {
+            "id": 5,
+            "text": "Hari ini adalah kesempatan baru untuk memulai.",
+            "category": "hope"
+        },
+        {
+            "id": 6,
+            "text": "Kamu tidak sendirian dalam perjalanan ini.",
+            "category": "support"
+        },
+        {
+            "id": 7,
+            "text": "Memaafkan diri sendiri adalah bentuk cinta tertinggi.",
+            "category": "self-love"
+        },
+        {
+            "id": 8,
+            "text": "Kesulitan yang kamu hadapi hari ini akan menjadi kekuatanmu besok.",
+            "category": "strength"
+        },
+        {
+            "id": 9,
+            "text": "Kamu berhak untuk beristirahat dan menjaga dirimu sendiri.",
+            "category": "self-care"
+        },
+        {
+            "id": 10,
+            "text": "Setiap napas adalah kesempatan untuk memulai kembali.",
+            "category": "mindfulness"
+        },
+        {
+            "id": 11,
+            "text": "Kamu adalah karya yang sedang dalam proses. Berikan dirimu waktu.",
+            "category": "patience"
+        },
+        {
+            "id": 12,
+            "text": "Keberanianmu untuk terus maju adalah hal yang luar biasa.",
+            "category": "courage"
+        },
+        {
+            "id": 13,
+            "text": "Tidak ada yang salah dengan meminta bantuan.",
+            "category": "support"
+        },
+        {
+            "id": 14,
+            "text": "Kamu memiliki kekuatan untuk melewati hari ini.",
+            "category": "strength"
+        },
+        {
+            "id": 15,
+            "text": "Masa lalumu tidak mendefinisikan masa depanmu.",
+            "category": "hope"
+        },
+        {
+            "id": 16,
+            "text": "Setiap hari adalah langkah menuju versi terbaik dirimu.",
+            "category": "progress"
+        },
+        {
+            "id": 17,
+            "text": "Kamu pantas mendapatkan kedamaian dan ketenangan.",
+            "category": "peace"
+        },
+        {
+            "id": 18,
+            "text": "Lukamu akan sembuh. Berikan waktu untuk proses itu.",
+            "category": "healing"
+        },
+        {
+            "id": 19,
+            "text": "Kamu sudah cukup. Tepat seperti apa adanya.",
+            "category": "self-acceptance"
+        },
+        {
+            "id": 20,
+            "text": "Hari yang sulit tidak berarti hidup yang sulit.",
+            "category": "perspective"
+        },
+        {
+            "id": 21,
+            "text": "Kamu memiliki hak untuk menetapkan batasan.",
+            "category": "boundaries"
+        },
+        {
+            "id": 22,
+            "text": "Kebaikan yang kamu berikan pada dunia dimulai dari kebaikan pada dirimu.",
+            "category": "self-love"
+        },
+        {
+            "id": 23,
+            "text": "Pemulihanmu adalah prioritas, bukan kemewahan.",
+            "category": "self-care"
+        },
+        {
+            "id": 24,
+            "text": "Kamu boleh melepaskan apa yang tidak lagi melayani kebaikanmu.",
+            "category": "letting-go"
+        },
+        {
+            "id": 25,
+            "text": "Setiap momen sulit yang kamu lewati adalah bukti kekuatanmu.",
+            "category": "resilience"
+        },
+        {
+            "id": 26,
+            "text": "Kamu layak untuk didengar dan dipahami.",
+            "category": "validation"
+        },
+        {
+            "id": 27,
+            "text": "Pertumbuhan terjadi di luar zona nyaman, dan kamu sedang tumbuh.",
+            "category": "growth"
+        },
+        {
+            "id": 28,
+            "text": "Tidak apa-apa untuk belum memiliki semua jawaban.",
+            "category": "patience"
+        },
+        {
+            "id": 29,
+            "text": "Kamu adalah pejuang yang hebat.",
+            "category": "strength"
+        },
+        {
+            "id": 30,
+            "text": "Hari ini, pilihlah untuk bersikap lembut pada diri sendiri.",
+            "category": "self-compassion"
+        },
+        {
+            "id": 31,
+            "text": "Kamu memiliki kekuatan untuk menciptakan perubahan positif.",
+            "category": "empowerment"
+        },
+        {
+            "id": 32,
+            "text": "Setiap air mata adalah bagian dari proses penyembuhan.",
+            "category": "healing"
+        },
+        {
+            "id": 33,
+            "text": "Kamu berhak atas ruang yang aman dan penuh cinta.",
+            "category": "safety"
+        },
+        {
+            "id": 34,
+            "text": "Keberanian bukan berarti tidak takut, tapi terus maju meski takut.",
+            "category": "courage"
+        },
+        {
+            "id": 35,
+            "text": "Apa yang kamu rasakan itu penting.",
+            "category": "validation"
+        },
+        {
+            "id": 36,
+            "text": "Setiap pagi adalah awal yang baru.",
+            "category": "hope"
+        },
+        {
+            "id": 37,
+            "text": "Kamu tidak harus sempurna untuk layak dicintai.",
+            "category": "self-acceptance"
+        },
+        {
+            "id": 38,
+            "text": "Proses penyembuhanmu unik, jangan bandingkan dengan orang lain.",
+            "category": "healing"
+        },
+        {
+            "id": 39,
+            "text": "Kamu memiliki keindahan dalam dirimu yang mungkin belum kamu sadari.",
+            "category": "self-worth"
+        },
+        {
+            "id": 40,
+            "text": "Hari ini, izinkan dirimu untuk merasakan damai.",
+            "category": "peace"
+        },
+        {
+            "id": 41,
+            "text": "Setiap usaha yang kamu lakukan berarti, sekecil apapun.",
+            "category": "effort"
+        },
+        {
+            "id": 42,
+            "text": "Kamu sudah sejauh ini. Itu sudah pencapaian yang luar biasa.",
+            "category": "progress"
+        },
+        {
+            "id": 43,
+            "text": "Pikiran negatif hanyalah pikiran, bukan kenyataan.",
+            "category": "mindfulness"
+        },
+        {
+            "id": 44,
+            "text": "Bersyukurlah pada tubuhmu yang terus berjuang bersamamu.",
+            "category": "gratitude"
+        },
+        {
+            "id": 45,
+            "text": "Kamu berhak untuk bahagia.",
+            "category": "happiness"
+        },
+        {
+            "id": 46,
+            "text": "Mengakui rasa sakit adalah langkah pertama menuju penyembuhan.",
+            "category": "awareness"
+        },
+        {
+            "id": 47,
+            "text": "Kamu lebih tangguh dari badai yang sedang kamu hadapi.",
+            "category": "resilience"
+        },
+        {
+            "id": 48,
+            "text": "Izinkan dirimu untuk merayakan kemenangan kecil.",
+            "category": "celebration"
+        },
+        {
+            "id": 49,
+            "text": "Kamu adalah harapan bagi dirimu sendiri.",
+            "category": "hope"
+        },
+        {
+            "id": 50,
+            "text": "Hari ini, kamu sudah melakukan yang terbaik. Dan itu cukup.",
+            "category": "self-acceptance"
+        }
+    ],
+    "categories": {
+        "self-love": "Cinta Diri",
+        "progress": "Kemajuan",
+        "validation": "Validasi",
+        "strength": "Kekuatan",
+        "hope": "Harapan",
+        "support": "Dukungan",
+        "self-care": "Perawatan Diri",
+        "mindfulness": "Kesadaran",
+        "patience": "Kesabaran",
+        "courage": "Keberanian",
+        "peace": "Kedamaian",
+        "healing": "Penyembuhan",
+        "self-acceptance": "Penerimaan Diri",
+        "perspective": "Perspektif",
+        "boundaries": "Batasan",
+        "letting-go": "Melepaskan",
+        "resilience": "Ketangguhan",
+        "growth": "Pertumbuhan",
+        "self-compassion": "Belas Kasih Diri",
+        "empowerment": "Pemberdayaan",
+        "safety": "Keamanan",
+        "self-worth": "Harga Diri",
+        "effort": "Usaha",
+        "gratitude": "Rasa Syukur",
+        "happiness": "Kebahagiaan",
+        "awareness": "Kesadaran",
+        "celebration": "Perayaan"
+    }
+}

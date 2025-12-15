@@ -1,46 +1,147 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pulih - Ruang Aman Anda</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-</head>
-<body>
-    <div class="app-container">
-        <header class="chat-header">
-            <div class="logo">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#7C9A92"/>
-                </svg>
-                <h1>Pulih</h1>
-            </div>
-            <p class="subtitle">Asisten Psikolog Virtual Anda</p>
-        </header>
+<html class="light" lang="en">
 
-        <main class="chat-area" id="chat-area">
-            <div class="message system-message">
-                <div class="message-content">
-                    <p>Halo. Saya Pulih.</p>
-                    <p>Ini adalah ruang aman bagi Anda untuk bercerita tanpa takut dihakimi. Saya di sini untuk mendengarkan dan mendukung Anda.</p>
-                    <p class="disclaimer">Perhatian: Saya adalah teman AI, bukan pengganti profesional medis. Jika Anda dalam bahaya, mohon hubungi layanan darurat 119.</p>
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Pulih - Login</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="css/main.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="js/config.js"></script>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-text-main dark:text-gray-100 min-h-screen transition-colors duration-200 overflow-x-hidden relative selection:bg-primary/30">
+    <div class="fixed inset-0 z-0">
+        <div class="absolute inset-0 bg-cover bg-center md:transition-transform md:duration-[20s] md:ease-in-out md:transform md:scale-105"
+            style='background-image: url("img/background.png");'>
+        </div>
+        <div
+            class="absolute inset-0 bg-gradient-to-br from-green-50/95 via-white/80 to-green-100/90 dark:from-green-950/95 dark:via-black/80 dark:to-green-900/90 backdrop-blur-[2px]">
+        </div>
+    </div>
+    <header
+        class="relative z-50 flex items-center justify-between px-6 lg:px-12 py-6 w-full max-w-7xl mx-auto animate-fade-in">
+        <div class="flex items-center gap-3">
+            <div
+                class="size-10 text-primary flex items-center justify-center bg-white/80 dark:bg-black/40 backdrop-blur-sm rounded-xl shadow-sm ring-1 ring-white/50">
+                <span class="material-symbols-outlined text-[28px]">spa</span>
+            </div>
+            <h2 class="text-text-main dark:text-white text-2xl font-bold tracking-tight drop-shadow-sm">Pulih</h2>
+        </div>
+        <div class="flex items-center gap-4">
+            <button onclick="window.toggleTheme()"
+                class="flex items-center justify-center rounded-full size-11 bg-white/70 dark:bg-black/30 text-text-main dark:text-white hover:bg-white dark:hover:bg-black/50 transition-all duration-300 border border-white/50 dark:border-white/10 backdrop-blur-md shadow-sm hover:shadow-md">
+                <span class="material-symbols-outlined text-[20px]">contrast</span>
+            </button>
+            <a class="flex items-center justify-center rounded-full h-11 px-5 bg-white/70 dark:bg-red-900/30 text-red-600 dark:text-red-300 hover:bg-white dark:hover:bg-red-900/50 transition-all duration-300 border border-white/50 dark:border-red-800/30 backdrop-blur-md shadow-sm hover:shadow-md group"
+                href="https://www.google.com">
+                <span
+                    class="material-symbols-outlined mr-2 text-[20px] group-hover:-translate-x-1 transition-transform">logout</span>
+                <span class="text-sm font-semibold">Quick Exit</span>
+            </a>
+        </div>
+    </header>
+    <main
+        class="relative z-10 flex-1 flex flex-col justify-center items-center px-4 py-8 lg:py-12 w-full max-w-7xl mx-auto min-h-[calc(100vh-100px)]">
+        <div class="w-full grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+
+            <!-- Hero / Left Side -->
+            <div class="lg:col-span-7 space-y-8 text-center lg:text-left text-text-main dark:text-white lg:pl-4">
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-white/40 dark:bg-black/30 backdrop-blur-md rounded-full border border-white/30 dark:border-white/10 shadow-sm transition-transform hover:scale-105 duration-300 cursor-default animate-slide-up">
+                    <span
+                        class="material-symbols-outlined text-[20px] text-green-700 dark:text-green-400">shield_lock</span>
+                    <span class="text-sm font-medium tracking-wide text-green-900 dark:text-green-100 uppercase">Ruang
+                        Aman &amp; Privat</span>
+                </div>
+                <h1
+                    class="text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] drop-shadow-sm text-green-950 dark:text-green-50 animate-slide-up delay-100">
+                    You are not <br class="hidden lg:block" />
+                    <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-green-700 to-green-500 dark:from-green-400 dark:to-green-200">alone.</span>
+                </h1>
+                <p
+                    class="text-lg lg:text-2xl text-green-900/80 dark:text-green-100/80 font-light leading-relaxed max-w-2xl mx-auto lg:mx-0 animate-slide-up delay-200">
+                    Setiap langkah kecil adalah bagian dari perjalanan pemulihan. Kami di sini untuk mendengar dan
+                    mendukung Anda, kapanpun Anda siap.
+                </p>
+                <div class="hidden lg:flex items-center gap-4 pt-4 animate-slide-up delay-300">
+                    <div class="flex -space-x-3">
+                        <div
+                            class="size-10 rounded-full bg-green-100 border-2 border-white flex items-center justify-center text-xs font-bold text-green-700 shadow-sm">
+                            A</div>
+                        <div
+                            class="size-10 rounded-full bg-green-200 border-2 border-white flex items-center justify-center text-xs font-bold text-green-700 shadow-sm">
+                            R</div>
+                        <div
+                            class="size-10 rounded-full bg-green-300 border-2 border-white flex items-center justify-center text-xs font-bold text-green-700 shadow-sm">
+                            K</div>
+                    </div>
+                    <p class="text-sm font-medium text-green-800 dark:text-green-200">Bergabung dengan 2,000+ pengguna
+                        lainnya</p>
                 </div>
             </div>
-        </main>
 
-        <footer class="input-area">
-            <div class="input-wrapper">
-                <textarea id="user-input" placeholder="Ceritakan apa yang Anda rasakan..." rows="1"></textarea>
-                <button id="send-btn" aria-label="Kirim Pesan">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="currentColor"/>
-                    </svg>
+            <!-- Form Container / Right Side -->
+            <div class="lg:col-span-5 w-full max-w-md mx-auto animate-fade-in delay-200" id="auth-container">
+                <!-- Dynamic content will be injected here by auth.js -->
+                <div class="flex justify-center p-12">
+                    <span class="material-symbols-outlined animate-spin text-primary text-4xl">progress_activity</span>
+                </div>
+            </div>
+
+        </div>
+        <div
+            class="mt-6 flex justify-center items-center gap-2 text-xs text-green-800/60 dark:text-green-200/50 font-medium animate-fade-in delay-300">
+            <span class="material-symbols-outlined text-[16px]">lock_clock</span>
+            <span>End-to-end Encrypted</span>
+        </div>
+    </main>
+
+    <!-- Nickname Modal -->
+    <div id="nickname-modal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div
+            class="bg-white dark:bg-surface-dark rounded-2xl p-6 w-full max-w-sm mx-4 shadow-xl border border-gray-100 dark:border-gray-700 transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-bold text-[#0d1b10] dark:text-white mb-2">Nama Panggilan</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Buat akun anonim untuk akses kembali nanti.</p>
+
+            <div class="space-y-3 mb-6">
+                <input id="modal-nickname-input"
+                    class="w-full bg-[#f8fcf9] dark:bg-[#0d1b10] border border-[#cfe7d3] dark:border-[#2a4d31] text-[#0d1b10] dark:text-white text-base rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600"
+                    placeholder="Nama Panggilan (Opsional)" type="text" />
+
+                <input id="modal-username-input"
+                    class="w-full bg-[#f8fcf9] dark:bg-[#0d1b10] border border-[#cfe7d3] dark:border-[#2a4d31] text-[#0d1b10] dark:text-white text-base rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600"
+                    placeholder="Username Unik (Wajib)" type="text" />
+
+                <div class="relative">
+                    <input id="modal-password-input"
+                        class="w-full bg-[#f8fcf9] dark:bg-[#0d1b10] border border-[#cfe7d3] dark:border-[#2a4d31] text-[#0d1b10] dark:text-white text-base rounded-xl px-4 py-3 pr-10 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600"
+                        placeholder="Kata Sandi (Wajib)" type="password" />
+                    <button type="button" id="toggle-modal-password"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors focus:outline-none">
+                        <span class="material-symbols-outlined text-[20px]">visibility</span>
+                    </button>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button id="modal-cancel-btn"
+                    class="flex-1 py-2.5 rounded-xl border border-transparent text-gray-500 dark:text-gray-400 font-medium text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    Batal
+                </button>
+                <button id="modal-confirm-btn"
+                    class="flex-1 py-2.5 rounded-xl bg-primary hover:bg-[#10d630] text-[#0d1b10] font-bold text-sm shadow-md shadow-green-200 dark:shadow-none transition-all">
+                    Lanjut
                 </button>
             </div>
-        </footer>
+        </div>
     </div>
-    <script src="script.js"></script>
+
+    <script src="js/auth.js" type="module"></script>
 </body>
+
 </html>

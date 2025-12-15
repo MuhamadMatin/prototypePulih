@@ -1,0 +1,26 @@
+/* ===========================================
+   PATTERNS
+   Background patterns and doodles
+   =========================================== */
+
+/* Doodle Pattern */
+.bg-doodle {
+    background-color: #f8fcf9;
+    background-image: radial-gradient(#13ec37 0.5px, transparent 0.5px), radial-gradient(#13ec37 0.5px, #f8fcf9 0.5px);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    opacity: 0.6;
+}
+
+.dark .bg-doodle {
+    background-color: #0a1f10;
+    background-image: radial-gradient(#15803d 0.5px, transparent 0.5px), radial-gradient(#15803d 0.5px, #0a1f10 0.5px);
+    opacity: 0.3;
+}
+
+/* Mi Browser Specific Fix */
+@media (prefers-color-scheme: dark) {
+    html.dark body {
+        background-color: #0a160c !important;
+    }
+}
